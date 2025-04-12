@@ -1,0 +1,87 @@
+{
+  "players": {
+    "Jeremy": {
+      "duelist": [
+        "Jett"
+      ],
+      "controller": [
+        "Brimstone"
+      ],
+      "initiator": [
+        "Skye"
+      ],
+      "sentinel": [
+        "Cypher"
+      ]
+    },
+    "Trippy": {
+      "duelist": [
+        "Phoenix"
+      ],
+      "controller": [
+        "Harbor"
+      ],
+      "initiator": [
+        "Fade"
+      ],
+      "sentinel": [
+        "Sage"
+      ]
+    },
+    "August": {
+      "duelist": [
+        "Yoru"
+      ],
+      "controller": [
+        "Viper"
+      ],
+      "initiator": [
+        "Gekko"
+      ],
+      "sentinel": [
+        "Chamber"
+      ]
+    },
+    "Kevin": {
+      "duelist": [
+        "Raze"
+      ],
+      "controller": [
+        "Astra"
+      ],
+      "initiator": [
+        "Breach"
+      ],
+      "sentinel": [
+        "Killjoy"
+      ]
+    },
+    "Alyssa": {
+      "duelist": [
+        "Reyna"
+      ],
+      "controller": [],
+      "initiator": [
+        "Sova"
+      ],
+      "sentinel": [
+        "Sage"
+      ]
+    },
+    "Aaron": {
+      "duelist": [
+        "Neon"
+      ],
+      "controller": [
+        "Omen"
+      ],
+      "initiator": [
+        "KAY/O"
+      ],
+      "sentinel": [
+        "Killjoy"
+      ]
+    }
+  },
+  "exportDate": "2025-04-12T17:02:32.653Z"
+}
