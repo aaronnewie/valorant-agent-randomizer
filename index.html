@@ -33,40 +33,19 @@
 <body>
     <header role="banner">
         <div class="header-container">
-            <h1>Our Valorant Season</h1>
+            <h1>Valorant Agent Randomizer</h1>
             <div class="player-legend" role="complementary" aria-label="Player Legend">
                 <h2>Players</h2>
                 <div class="legend-grid">
-                    <div class="legend-item Jeremy">
+                    <div class="legend-item new-player">
                         <div class="color-box"></div>
-                        <span>Jeremy</span>
-                    </div>
-                    <div class="legend-item Trippy">
-                        <div class="color-box"></div>
-                        <span>Trippy</span>
-                    </div>
-                    <div class="legend-item August">
-                        <div class="color-box"></div>
-                        <span>August</span>
-                    </div>
-                    <div class="legend-item Kevin">
-                        <div class="color-box"></div>
-                        <span>Kevin</span>
-                    </div>
-                    <div class="legend-item Alyssa">
-                        <div class="color-box"></div>
-                        <span>Alyssa</span>
-                    </div>
-                    <div class="legend-item Aaron">
-                        <div class="color-box"></div>
-                        <span>Aaron</span>
+                        <input type="text" class="new-player-input" placeholder="Enter player name" aria-label="New player name">
                     </div>
                     <div class="legend-controls">
-                        <button class="legend-button" id="add-player">Add Player</button>
+                        <button class="legend-button" id="export-players">Export Players</button>
                         <button class="legend-button" id="import-players-btn">Import Players</button>
                         <input type="file" id="import-players" hidden accept=".json">
-                        <button class="legend-button" id="export-players">Export Players</button>
-                        <button class="legend-button" id="reset-all">Reset All</button>
+                        <button class="legend-button reset-all-btn" id="reset-all">Reset All Players</button>
                     </div>
                 </div>
             </div>
@@ -88,57 +67,50 @@
         <section class="agent-grid" id="duelist-section" role="region" aria-labelledby="duelist-title">
             <h2 class="role-title" id="duelist-title">Duelists</h2>
             <div class="agents">
-                <div class="agent-card Jeremy">
-                    <img src="images/Jett_icon.png.webp" alt="Jett" class="agent-icon" 
-                        onerror="this.onerror=null; this.src='images/Jett_icon.png';">
+                <div class="agent-card">
+                    <img src="images/Jett_icon.png.webp" alt="Jett" class="agent-icon">
                     <div class="agent-info">
                         <h3>Jett</h3>
-                        <p class="player">Jeremy</p>
-                    </div>
-                </div>
-                <div class="agent-card Trippy">
-                    <img src="images/Phoenix_icon.png.webp" alt="Phoenix" class="agent-icon" 
-                        onerror="this.onerror=null; this.src='images/Phoenix_icon.webp'; if(this.src.includes('.webp'))this.src='images/Phoenix_icon.png';">
-                    <div class="agent-info">
-                        <h3>Phoenix</h3>
-                        <p class="player">Trippy</p>
-                    </div>
-                </div>
-                <div class="agent-card Aaron">
-                    <img src="images/Neon_icon.png.webp" alt="Neon" class="agent-icon" 
-                        onerror="this.onerror=null; this.src='images/Neon_icon.webp'; if(this.src.includes('.webp'))this.src='images/Neon_icon.png';">
-                    <div class="agent-info">
-                        <h3>Neon</h3>
-                        <p class="player">Aaron</p>
-                    </div>
-                </div>
-                <div class="agent-card Kevin">
-                    <img src="images/Raze_icon.png.webp" alt="Raze" class="agent-icon" 
-                        onerror="this.onerror=null; this.src='images/Raze_icon.webp'; if(this.src.includes('.webp'))this.src='images/Raze_icon.png';">
-                    <div class="agent-info">
-                        <h3>Raze</h3>
-                        <p class="player">Kevin</p>
-                    </div>
-                </div>
-                <div class="agent-card Alyssa">
-                    <img src="images/Reyna_icon.png.webp" alt="Reyna" class="agent-icon" 
-                        onerror="this.onerror=null; this.src='images/Reyna_icon.webp'; if(this.src.includes('.webp'))this.src='images/Reyna_icon.png';">
-                    <div class="agent-info">
-                        <h3>Reyna</h3>
-                        <p class="player">Alyssa</p>
-                    </div>
-                </div>
-                <div class="agent-card August">
-                    <img src="images/Yoru_icon.png.webp" alt="Yoru" class="agent-icon" 
-                        onerror="this.onerror=null; this.src='images/Yoru_icon.webp'; if(this.src.includes('.webp'))this.src='images/Yoru_icon.png';">
-                    <div class="agent-info">
-                        <h3>Yoru</h3>
-                        <p class="player">August</p>
+                        <p class="player">Unassigned</p>
                     </div>
                 </div>
                 <div class="agent-card">
-                    <img src="images/Iso_icon.png.webp" alt="Iso" class="agent-icon" 
-                        onerror="this.onerror=null; this.src='images/Iso_icon.webp'; if(this.src.includes('.webp'))this.src='images/Iso_icon.png';">
+                    <img src="images/Phoenix_icon.png.webp" alt="Phoenix" class="agent-icon">
+                    <div class="agent-info">
+                        <h3>Phoenix</h3>
+                        <p class="player">Unassigned</p>
+                    </div>
+                </div>
+                <div class="agent-card">
+                    <img src="images/Neon_icon.png.webp" alt="Neon" class="agent-icon">
+                    <div class="agent-info">
+                        <h3>Neon</h3>
+                        <p class="player">Unassigned</p>
+                    </div>
+                </div>
+                <div class="agent-card">
+                    <img src="images/Raze_icon.png.webp" alt="Raze" class="agent-icon">
+                    <div class="agent-info">
+                        <h3>Raze</h3>
+                        <p class="player">Unassigned</p>
+                    </div>
+                </div>
+                <div class="agent-card">
+                    <img src="images/Reyna_icon.png.webp" alt="Reyna" class="agent-icon">
+                    <div class="agent-info">
+                        <h3>Reyna</h3>
+                        <p class="player">Unassigned</p>
+                    </div>
+                </div>
+                <div class="agent-card">
+                    <img src="images/Yoru_icon.png.webp" alt="Yoru" class="agent-icon">
+                    <div class="agent-info">
+                        <h3>Yoru</h3>
+                        <p class="player">Unassigned</p>
+                    </div>
+                </div>
+                <div class="agent-card">
+                    <img src="images/Iso_icon.png.webp" alt="Iso" class="agent-icon">
                     <div class="agent-info">
                         <h3>Iso</h3>
                         <p class="player">Unassigned</p>
@@ -150,49 +122,43 @@
         <section class="agent-grid" id="controller-section" role="region" aria-labelledby="controller-title">
             <h2 class="role-title" id="controller-title">Controllers</h2>
             <div class="agents">
-                <div class="agent-card Kevin">
-                    <img src="images/Astra_icon.png.webp" alt="Astra" class="agent-icon" 
-                        onerror="this.onerror=null; this.src='images/Astra_icon.webp'; if(this.src.includes('.webp'))this.src='images/Astra_icon.png';">
+                <div class="agent-card">
+                    <img src="images/Astra_icon.png.webp" alt="Astra" class="agent-icon">
                     <div class="agent-info">
                         <h3>Astra</h3>
-                        <p class="player">Kevin</p>
-                    </div>
-                </div>
-                <div class="agent-card Jeremy">
-                    <img src="images/Brimstone_icon.png.webp" alt="Brimstone" class="agent-icon" 
-                        onerror="this.onerror=null; this.src='images/Brimstone_icon.webp'; if(this.src.includes('.webp'))this.src='images/Brimstone_icon.png';">
-                    <div class="agent-info">
-                        <h3>Brimstone</h3>
-                        <p class="player">Jeremy</p>
-                    </div>
-                </div>
-                <div class="agent-card Aaron">
-                    <img src="images/Omen_icon.png.webp" alt="Omen" class="agent-icon" 
-                        onerror="this.onerror=null; this.src='images/Omen_icon.webp'; if(this.src.includes('.webp'))this.src='images/Omen_icon.png';">
-                    <div class="agent-info">
-                        <h3>Omen</h3>
-                        <p class="player">Aaron</p>
-                    </div>
-                </div>
-                <div class="agent-card August">
-                    <img src="images/Viper_icon.png.webp" alt="Viper" class="agent-icon" 
-                        onerror="this.onerror=null; this.src='images/Viper_icon.webp'; if(this.src.includes('.webp'))this.src='images/Viper_icon.png';">
-                    <div class="agent-info">
-                        <h3>Viper</h3>
-                        <p class="player">August</p>
-                    </div>
-                </div>
-                <div class="agent-card Trippy">
-                    <img src="images/Harbor_icon.png.webp" alt="Harbor" class="agent-icon" 
-                        onerror="this.onerror=null; this.src='images/Harbor_icon.webp'; if(this.src.includes('.webp'))this.src='images/Harbor_icon.png';">
-                    <div class="agent-info">
-                        <h3>Harbor</h3>
-                        <p class="player">Trippy</p>
+                        <p class="player">Unassigned</p>
                     </div>
                 </div>
                 <div class="agent-card">
-                    <img src="images/Clove_icon.png.webp" alt="Clove" class="agent-icon" 
-                        onerror="this.onerror=null; this.src='images/Clove_icon.webp'; if(this.src.includes('.webp'))this.src='images/Clove_icon.png';">
+                    <img src="images/Brimstone_icon.png.webp" alt="Brimstone" class="agent-icon">
+                    <div class="agent-info">
+                        <h3>Brimstone</h3>
+                        <p class="player">Unassigned</p>
+                    </div>
+                </div>
+                <div class="agent-card">
+                    <img src="images/Omen_icon.png.webp" alt="Omen" class="agent-icon">
+                    <div class="agent-info">
+                        <h3>Omen</h3>
+                        <p class="player">Unassigned</p>
+                    </div>
+                </div>
+                <div class="agent-card">
+                    <img src="images/Viper_icon.png.webp" alt="Viper" class="agent-icon">
+                    <div class="agent-info">
+                        <h3>Viper</h3>
+                        <p class="player">Unassigned</p>
+                    </div>
+                </div>
+                <div class="agent-card">
+                    <img src="images/Harbor_icon.png.webp" alt="Harbor" class="agent-icon">
+                    <div class="agent-info">
+                        <h3>Harbor</h3>
+                        <p class="player">Unassigned</p>
+                    </div>
+                </div>
+                <div class="agent-card">
+                    <img src="images/Clove_icon.png.webp" alt="Clove" class="agent-icon">
                     <div class="agent-info">
                         <h3>Clove</h3>
                         <p class="player">Unassigned</p>
@@ -204,57 +170,50 @@
         <section class="agent-grid" id="initiator-section" role="region" aria-labelledby="initiator-title">
             <h2 class="role-title" id="initiator-title">Initiators</h2>
             <div class="agents">
-                <div class="agent-card Kevin">
-                    <img src="images/Breach_icon.png.webp" alt="Breach" class="agent-icon" 
-                        onerror="this.onerror=null; this.src='images/Breach_icon.webp'; if(this.src.includes('.webp'))this.src='images/Breach_icon.png';">
+                <div class="agent-card">
+                    <img src="images/Breach_icon.png.webp" alt="Breach" class="agent-icon">
                     <div class="agent-info">
                         <h3>Breach</h3>
-                        <p class="player">Kevin</p>
-                    </div>
-                </div>
-                <div class="agent-card August">
-                    <img src="images/Gekko_icon.png.webp" alt="Gekko" class="agent-icon" 
-                        onerror="this.onerror=null; this.src='images/Gekko_icon.webp'; if(this.src.includes('.webp'))this.src='images/Gekko_icon.png';">
-                    <div class="agent-info">
-                        <h3>Gekko</h3>
-                        <p class="player">August</p>
-                    </div>
-                </div>
-                <div class="agent-card Aaron">
-                    <img src="images/KAYO_icon.png.webp" alt="KAY/O" class="agent-icon" 
-                        onerror="this.onerror=null; this.src='images/KAYO_icon.webp'; if(this.src.includes('.webp'))this.src='images/KAYO_icon.png';">
-                    <div class="agent-info">
-                        <h3>KAY/O</h3>
-                        <p class="player">Aaron</p>
-                    </div>
-                </div>
-                <div class="agent-card Jeremy">
-                    <img src="images/Skye_icon.png.webp" alt="Skye" class="agent-icon" 
-                        onerror="this.onerror=null; this.src='images/Skye_icon.webp'; if(this.src.includes('.webp'))this.src='images/Skye_icon.png';">
-                    <div class="agent-info">
-                        <h3>Skye</h3>
-                        <p class="player">Jeremy</p>
-                    </div>
-                </div>
-                <div class="agent-card Alyssa">
-                    <img src="images/Sova_icon.png.webp" alt="Sova" class="agent-icon" 
-                        onerror="this.onerror=null; this.src='images/Sova_icon.webp'; if(this.src.includes('.webp'))this.src='images/Sova_icon.png';">
-                    <div class="agent-info">
-                        <h3>Sova</h3>
-                        <p class="player">Alyssa</p>
-                    </div>
-                </div>
-                <div class="agent-card Trippy">
-                    <img src="images/Fade_icon.png.webp" alt="Fade" class="agent-icon" 
-                        onerror="this.onerror=null; this.src='images/Fade_icon.webp'; if(this.src.includes('.webp'))this.src='images/Fade_icon.png';">
-                    <div class="agent-info">
-                        <h3>Fade</h3>
-                        <p class="player">Trippy</p>
+                        <p class="player">Unassigned</p>
                     </div>
                 </div>
                 <div class="agent-card">
-                    <img src="images/Waylay_icon.png.webp" alt="Waylay" class="agent-icon" 
-                        onerror="this.onerror=null; this.src='images/Waylay_icon.webp'; if(this.src.includes('.webp'))this.src='images/Waylay_icon.png';">
+                    <img src="images/Gekko_icon.png.webp" alt="Gekko" class="agent-icon">
+                    <div class="agent-info">
+                        <h3>Gekko</h3>
+                        <p class="player">Unassigned</p>
+                    </div>
+                </div>
+                <div class="agent-card">
+                    <img src="images/KAYO_icon.png.webp" alt="KAY/O" class="agent-icon">
+                    <div class="agent-info">
+                        <h3>KAY/O</h3>
+                        <p class="player">Unassigned</p>
+                    </div>
+                </div>
+                <div class="agent-card">
+                    <img src="images/Skye_icon.png.webp" alt="Skye" class="agent-icon">
+                    <div class="agent-info">
+                        <h3>Skye</h3>
+                        <p class="player">Unassigned</p>
+                    </div>
+                </div>
+                <div class="agent-card">
+                    <img src="images/Sova_icon.png.webp" alt="Sova" class="agent-icon">
+                    <div class="agent-info">
+                        <h3>Sova</h3>
+                        <p class="player">Unassigned</p>
+                    </div>
+                </div>
+                <div class="agent-card">
+                    <img src="images/Fade_icon.png.webp" alt="Fade" class="agent-icon">
+                    <div class="agent-info">
+                        <h3>Fade</h3>
+                        <p class="player">Unassigned</p>
+                    </div>
+                </div>
+                <div class="agent-card">
+                    <img src="images/Waylay_icon.png.webp" alt="Waylay" class="agent-icon">
                     <div class="agent-info">
                         <h3>Waylay</h3>
                         <p class="player">Unassigned</p>
@@ -266,57 +225,50 @@
         <section class="agent-grid" id="sentinel-section" role="region" aria-labelledby="sentinel-title">
             <h2 class="role-title" id="sentinel-title">Sentinels</h2>
             <div class="agents">
-                <div class="agent-card August">
-                    <img src="images/Chamber_icon.png.webp" alt="Chamber" class="agent-icon" 
-                        onerror="this.onerror=null; this.src='images/Chamber_icon.webp'; if(this.src.includes('.webp'))this.src='images/Chamber_icon.png';">
+                <div class="agent-card">
+                    <img src="images/Chamber_icon.png.webp" alt="Chamber" class="agent-icon">
                     <div class="agent-info">
                         <h3>Chamber</h3>
-                        <p class="player">August</p>
-                    </div>
-                </div>
-                <div class="agent-card Jeremy">
-                    <img src="images/Cypher_icon.png.webp" alt="Cypher" class="agent-icon" 
-                        onerror="this.onerror=null; this.src='images/Cypher_icon.webp'; if(this.src.includes('.webp'))this.src='images/Cypher_icon.png';">
-                    <div class="agent-info">
-                        <h3>Cypher</h3>
-                        <p class="player">Jeremy</p>
+                        <p class="player">Unassigned</p>
                     </div>
                 </div>
                 <div class="agent-card">
-                    <img src="images/Killjoy_icon.png.webp" alt="Killjoy" class="agent-icon" 
-                        onerror="this.onerror=null; this.src='images/Killjoy_icon.webp'; if(this.src.includes('.webp'))this.src='images/Killjoy_icon.png';">
+                    <img src="images/Cypher_icon.png.webp" alt="Cypher" class="agent-icon">
+                    <div class="agent-info">
+                        <h3>Cypher</h3>
+                        <p class="player">Unassigned</p>
+                    </div>
+                </div>
+                <div class="agent-card">
+                    <img src="images/Killjoy_icon.png.webp" alt="Killjoy" class="agent-icon">
                     <div class="agent-info">
                         <h3>Killjoy</h3>
                         <p class="player">Unassigned</p>
                     </div>
                 </div>
                 <div class="agent-card">
-                    <img src="images/Sage_icon.png.webp" alt="Sage" class="agent-icon" 
-                        onerror="this.onerror=null; this.src='images/Sage_icon.webp'; if(this.src.includes('.webp'))this.src='images/Sage_icon.png';">
+                    <img src="images/Sage_icon.png.webp" alt="Sage" class="agent-icon">
                     <div class="agent-info">
                         <h3>Sage</h3>
                         <p class="player">Unassigned</p>
                     </div>
                 </div>
-                <div class="agent-card split-name">
-                    <img src="images/Deadlock_icon.png.webp" alt="Deadlock" class="agent-icon" 
-                        onerror="this.onerror=null; this.src='images/Deadlock_icon.webp'; if(this.src.includes('.webp'))this.src='images/Deadlock_icon.png';">
+                <div class="agent-card">
+                    <img src="images/Deadlock_icon.png.webp" alt="Deadlock" class="agent-icon">
                     <div class="agent-info">
-                        <h3><span class="Jeremy">Deadlock</span>
-                        <p class="player"><span class="Jeremy">Jeremy</span></p></h3>
+                        <h3>Deadlock</h3>
+                        <p class="player">Unassigned</p>
                     </div>
                 </div>
                 <div class="agent-card">
-                    <img src="images/Tejo_icon.png.webp" alt="Tejo" class="agent-icon" 
-                        onerror="this.onerror=null; this.src='images/Tejo_icon.webp'; if(this.src.includes('.webp'))this.src='images/Tejo_icon.png';">
+                    <img src="images/Tejo_icon.png.webp" alt="Tejo" class="agent-icon">
                     <div class="agent-info">
                         <h3>Tejo</h3>
                         <p class="player">Unassigned</p>
                     </div>
                 </div>
                 <div class="agent-card">
-                    <img src="images/Vyse_icon.png.webp" alt="Vyse" class="agent-icon" 
-                        onerror="this.onerror=null; this.src='images/Vyse_icon.webp'; if(this.src.includes('.webp'))this.src='images/Vyse_icon.png';">
+                    <img src="images/Vyse_icon.png.webp" alt="Vyse" class="agent-icon">
                     <div class="agent-info">
                         <h3>Vyse</h3>
                         <p class="player">Unassigned</p>
@@ -342,803 +294,6 @@
         </div>
     </div>
 
-    <script>
-        // Role handling and keyboard shortcuts
-        document.addEventListener('DOMContentLoaded', () => {
-            // Show all sections by default
-            document.querySelectorAll('.agent-grid').forEach(section => {
-                section.classList.add('active');
-            });
-            
-            // Make "All Roles" button active by default
-            const allRolesBtn = document.querySelector('.role-btn[data-role="all"]');
-            if (allRolesBtn) {
-                allRolesBtn.classList.add('active');
-                allRolesBtn.setAttribute('aria-selected', 'true');
-            }
-
-            // Initialize legend state from localStorage
-            const playerLegend = document.querySelector('.player-legend');
-            const isLegendCollapsed = localStorage.getItem('legendCollapsed') === 'true';
-            if (isLegendCollapsed) {
-                playerLegend.classList.add('collapsed');
-            }
-
-            // Add click handler for legend toggle
-            playerLegend.addEventListener('click', (e) => {
-                if (e.target.closest('.legend-grid')) return; // Don't toggle when clicking items
-                playerLegend.classList.toggle('collapsed');
-                localStorage.setItem('legendCollapsed', playerLegend.classList.contains('collapsed'));
-            });
-
-            // Add click handlers for legend items
-            document.querySelectorAll('.legend-item').forEach(item => {
-                item.addEventListener('click', (e) => {
-                    e.stopPropagation(); // Prevent legend collapse when clicking items
-                    const playerName = item.querySelector('span').textContent;
-                    filterAgentsByPlayer(playerName);
-                });
-            });
-
-            // Check for saved role preference
-            const savedRole = localStorage.getItem('activeRole');
-            if (savedRole && savedRole !== 'all') {
-                const button = document.querySelector(`.role-btn[data-role="${savedRole}"]`);
-                if (button) {
-                    handleRoleChange(button);
-                }
-            }
-
-            // Update indicators for unassigned agents
-            updateUnassignedIndicators();
-            updateUnassignedCounts();
-        });
-
-        // Update role buttons to show unassigned indicators
-        function updateUnassignedIndicators() {
-            const sentinelBtn = document.querySelector('.role-btn[data-role="sentinel"]');
-            if (document.querySelector('#sentinel-section .player:contains("Unassigned")')) {
-                sentinelBtn.setAttribute('data-has-unassigned', '');
-            }
-        }
-
-        function updateUnassignedCounts() {
-            const roles = ['duelist', 'controller', 'initiator', 'sentinel'];
-            
-            roles.forEach(role => {
-                const section = document.querySelector(`#${role}-section`);
-                const unassignedCount = section.querySelectorAll('.player:contains("Unassigned")').length;
-                const button = document.querySelector(`.role-btn[data-role="${role}"]`);
-                
-                if (unassignedCount > 0) {
-                    button.setAttribute('data-count', unassignedCount);
-                    button.setAttribute('data-has-unassigned', '');
-                } else {
-                    button.removeAttribute('data-count');
-                    button.removeAttribute('data-has-unassigned');
-                }
-                
-                section.querySelectorAll('.agent-card').forEach(card => {
-                    if (card.querySelector('.player:contains("Unassigned")')) {
-                        card.setAttribute('data-unassigned', 'true');
-                    }
-                });
-            });
-        }
-
-        document.querySelectorAll('.role-btn').forEach((button, index) => {
-            button.addEventListener('click', () => handleRoleChange(button));
-            button.setAttribute('tabindex', '0');
-            button.setAttribute('role', 'tab');
-            button.setAttribute('aria-selected', index === 0 ? 'true' : 'false');
-        });
-
-        function handleRoleChange(button) {
-            document.querySelectorAll('.role-btn').forEach(btn => {
-                btn.classList.remove('active');
-                btn.setAttribute('aria-selected', 'false');
-            });
-            button.classList.add('active');
-            button.setAttribute('aria-selected', 'true');
-
-            const role = button.dataset.role;
-            localStorage.setItem('activeRole', role);
-
-            // Remove active class from all sections first
-            document.querySelectorAll('.agent-grid').forEach(section => {
-                section.classList.remove('active');
-            });
-
-            if (role === 'all') {
-                // Show all sections
-                document.querySelectorAll('.agent-grid').forEach(section => {
-                    section.classList.add('active');
-                });
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            } else {
-                // Show only the selected section
-                const section = document.getElementById(`${role}-section`);
-                if (section) {
-                    section.classList.add('active');
-                    const headerOffset = document.querySelector('header').offsetHeight + 20;
-                    const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - headerOffset;
-                    window.scrollTo({
-                        top: sectionTop,
-                        behavior: 'smooth'
-                    });
-                }
-            }
-        }
-
-        // Function to filter agents by player
-        function filterAgentsByPlayer(playerName) {
-            const currentlyActive = document.querySelector('.legend-item.active');
-            const clickedItem = document.querySelector(`.legend-item.${playerName}`);
-            
-            // If clicking the already active item, clear the filter
-            if (currentlyActive && currentlyActive === clickedItem) {
-                clearPlayerFilter();
-                return;
-            }
-
-            // Remove active class from all legend items first
-            document.querySelectorAll('.legend-item').forEach(item => {
-                item.classList.remove('active');
-            });
-
-            // Add active class to clicked item
-            clickedItem.classList.add('active');
-
-            // Show all sections
-            document.querySelectorAll('.agent-grid').forEach(section => {
-                section.classList.add('active');
-            });
-
-            // Deactivate any active role button and activate "All Roles"
-            document.querySelectorAll('.role-btn').forEach(btn => {
-                btn.classList.remove('active');
-                btn.setAttribute('aria-selected', 'false');
-            });
-            const allRolesBtn = document.querySelector('.role-btn[data-role="all"]');
-            allRolesBtn.classList.add('active');
-            allRolesBtn.setAttribute('aria-selected', 'true');
-
-            // Filter agent cards
-            document.querySelectorAll('.agent-card').forEach(card => {
-                const playerText = card.querySelector('.player').textContent;
-                const isMatch = playerText.includes(playerName);
-                
-                // Handle split cards (agents shared by multiple players)
-                const isInSplitCard = card.classList.contains('split-name') && 
-                    card.querySelector(`.${playerName}`);
-                
-                if (isMatch || isInSplitCard) {
-                    card.classList.remove('filtered');
-                } else {
-                    card.classList.add('filtered');
-                }
-            });
-        }
-
-        // Function to clear player filtering
-        function clearPlayerFilter() {
-            document.querySelectorAll('.legend-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            document.querySelectorAll('.agent-card').forEach(card => {
-                card.classList.remove('filtered');
-            });
-        }
-
-        // Add clear filter when clicking outside legend items
-        document.querySelector('.player-legend').addEventListener('click', (e) => {
-            if (e.target.closest('.legend-item')) return;
-            clearPlayerFilter();
-            playerLegend.classList.toggle('collapsed');
-            localStorage.setItem('legendCollapsed', playerLegend.classList.contains('collapsed'));
-        });
-
-        // Add keyboard navigation
-        const roleNav = document.querySelector('.role-nav');
-        roleNav.addEventListener('keydown', (e) => {
-            const buttons = Array.from(roleNav.querySelectorAll('.role-btn'));
-            const currentIndex = buttons.findIndex(btn => btn === document.activeElement);
-            
-            switch (e.key) {
-                case 'ArrowRight':
-                case 'ArrowDown':
-                    e.preventDefault();
-                    const nextIndex = (currentIndex + 1) % buttons.length;
-                    buttons[nextIndex].focus();
-                    break;
-                case 'ArrowLeft':
-                case 'ArrowUp':
-                    e.preventDefault();
-                    const prevIndex = (currentIndex - 1 + buttons.length) % buttons.length;
-                    buttons[prevIndex].focus();
-                    break;
-                case 'Enter':
-                case ' ':
-                    e.preventDefault();
-                    handleRoleChange(document.activeElement);
-                    break;
-            }
-        });
-
-        // Add keyboard shortcuts for quick filtering
-        const shortcuts = {
-            'a': 'all',
-            'd': 'duelist',
-            'c': 'controller',
-            'i': 'initiator',
-            's': 'sentinel',
-            '?': 'help'
-        };
-
-        document.addEventListener('keydown', (e) => {
-            if (e.target.tagName === 'INPUT') return; // Don't trigger when typing in input fields
-            
-            if (e.key in shortcuts && !e.ctrlKey && !e.altKey && !e.metaKey) {
-                if (shortcuts[e.key] === 'help') {
-                    toggleHelpDialog();
-                } else {
-                    const button = document.querySelector(`.role-btn[data-role="${shortcuts[e.key]}"]`);
-                    if (button) {
-                        handleRoleChange(button);
-                        button.focus();
-                    }
-                }
-            }
-        });
-
-        // Add tooltips to show keyboard shortcuts
-        document.querySelectorAll('.role-btn').forEach(button => {
-            const role = button.dataset.role;
-            const shortcut = Object.entries(shortcuts).find(([key, value]) => value === role)?.[0];
-            if (shortcut) {
-                button.setAttribute('title', `Press '${shortcut}' to filter (${role})`);
-            }
-        });
-
-        // Keyboard trap for help dialog
-        const helpDialog = document.querySelector('.keyboard-help');
-        const focusableElements = helpDialog.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-        const firstFocusableElement = focusableElements[0];
-        const lastFocusableElement = focusableElements[focusableElements.length - 1];
-
-        let lastFocusedElement;
-
-        function toggleHelpDialog() {
-            const isHidden = helpDialog.hasAttribute('hidden');
-            if (isHidden) {
-                lastFocusedElement = document.activeElement;
-                helpDialog.removeAttribute('hidden');
-                firstFocusableElement.focus();
-            } else {
-                helpDialog.setAttribute('hidden', '');
-                if (lastFocusedElement) {
-                    lastFocusedElement.focus();
-                }
-            }
-        }
-
-        helpDialog.addEventListener('keydown', function(e) {
-            const isTabPressed = e.key === 'Tab';
-            
-            if (!isTabPressed) {
-                return;
-            }
-
-            if (e.shiftKey) {
-                if (document.activeElement === firstFocusableElement) {
-                    lastFocusableElement.focus();
-                    e.preventDefault();
-                }
-            } else {
-                if (document.activeElement === lastFocusableElement) {
-                    firstFocusableElement.focus();
-                    e.preventDefault();
-                }
-            }
-        });
-
-        // Close help dialog with ESC key or close button
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                const helpDialog = document.querySelector('.keyboard-help');
-                if (!helpDialog.hasAttribute('hidden')) {
-                    helpDialog.setAttribute('hidden', '');
-                }
-            }
-        });
-
-        document.querySelector('.close-dialog').addEventListener('click', () => {
-            const helpDialog = document.querySelector('.keyboard-help');
-            helpDialog.setAttribute('hidden', '');
-        });
-
-        // Add image loading handlers
-        document.querySelectorAll('.agent-icon').forEach(img => {
-            img.addEventListener('load', () => {
-                img.classList.add('loaded');
-            });
-            
-            img.addEventListener('error', () => {
-                img.classList.add('error');
-                img.setAttribute('title', 'Failed to load agent icon');
-            });
-        });
-
-        // Player management and randomization
-        const predefinedColors = [
-            '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD', '#D4A5A5',
-            '#9B59B6', '#3498DB', '#F1C40F', '#E74C3C', '#1ABC9C', '#F39C12'
-        ];
-
-        let usedColors = new Set();
-        let playerColors = {};
-
-        function getRandomColor() {
-            const availableColors = predefinedColors.filter(color => !Object.values(playerColors).includes(color));
-            if (availableColors.length === 0) {
-                return predefinedColors[Math.floor(Math.random() * predefinedColors.length)];
-            }
-            const color = availableColors[Math.floor(Math.random() * availableColors.length)];
-            return color;
-        }
-
-        // Update the addPlayerToLegend function to include delete button
-        function addPlayerToLegend(name, color = null) {
-            if (!color) {
-                color = getRandomColor();
-            }
-            playerColors[name] = color;
-            
-            const playerStyle = document.createElement('style');
-            playerStyle.textContent = `
-                .${name} { color: ${color}; }
-                .${name} .color-box { 
-                    background-color: ${color};
-                    box-shadow: 0 0 8px ${color}4D;
-                }
-                .agent-card.${name}:hover { 
-                    box-shadow: 0 8px 16px ${color}4D;
-                }
-            `;
-            document.head.appendChild(playerStyle);
-
-            const legendItem = document.createElement('div');
-            legendItem.className = `legend-item ${name}`;
-            legendItem.innerHTML = `
-                <div class="color-box"></div>
-                <span>${name}</span>
-                <button class="delete-player" aria-label="Delete ${name}">×</button>
-            `;
-
-            // Insert before the legend controls
-            const legendControls = document.querySelector('.legend-controls');
-            legendControls.parentNode.insertBefore(legendItem, legendControls);
-
-            // Add delete handler
-            legendItem.querySelector('.delete-player').addEventListener('click', (e) => {
-                e.stopPropagation();
-                deletePlayer(name);
-            });
-
-            // Add click handler for filtering
-            legendItem.addEventListener('click', (e) => {
-                if (!e.target.classList.contains('delete-player')) {
-                    e.stopPropagation();
-                    filterAgentsByPlayer(name);
-                }
-            });
-
-            return legendItem;
-        }
-
-        // Add delete player functionality
-        function deletePlayer(name) {
-            if (confirm(`Are you sure you want to delete ${name}?`)) {
-                // Remove player from legend
-                const legendItem = document.querySelector(`.legend-item.${name}`);
-                if (legendItem) legendItem.remove();
-
-                // Remove player's color style
-                document.querySelectorAll('style').forEach(style => {
-                    if (style.textContent.includes(`.${name} {`)) {
-                        style.remove();
-                    }
-                });
-
-                // Unassign player from all agents
-                document.querySelectorAll(`.agent-card.${name}`).forEach(card => {
-                    card.classList.remove(name);
-                    card.classList.remove('split-name');
-                    const playerElem = card.querySelector('.player');
-                    if (playerElem) {
-                        playerElem.textContent = 'Unassigned';
-                    }
-                    // Reset agent name styling
-                    const agentName = card.querySelector('h3');
-                    agentName.innerHTML = agentName.textContent;
-                    // Remove any split styling
-                    card.removeAttribute('data-players');
-                });
-
-                // Reset split agent cards that include this player
-                document.querySelectorAll('.split-name').forEach(card => {
-                    const playerText = card.querySelector('.player').textContent;
-                    if (playerText.includes(name)) {
-                        const otherPlayer = playerText.split(' ').find(p => p !== name);
-                        if (otherPlayer) {
-                            card.className = `agent-card ${otherPlayer}`;
-                            card.querySelector('.player').textContent = otherPlayer;
-                        } else {
-                            card.className = 'agent-card';
-                            card.querySelector('.player').textContent = 'Unassigned';
-                        }
-                        // Reset agent name styling
-                        const agentName = card.querySelector('h3');
-                        agentName.innerHTML = agentName.textContent;
-                    }
-                });
-
-                // Update player data in localStorage
-                delete playerColors[name];
-                savePlayers();
-            }
-        }
-
-        // Add reset functionality
-        document.getElementById('reset-all').addEventListener('click', () => {
-            if (confirm('This will remove all players and reset all agent assignments. Are you sure?')) {
-                // Clear all player assignments
-                document.querySelectorAll('.agent-card').forEach(card => {
-                    card.className = 'agent-card';
-                    const playerElem = card.querySelector('.player');
-                    if (playerElem) {
-                        playerElem.textContent = 'Unassigned';
-                    }
-                    // Reset agent name styling
-                    const agentName = card.querySelector('h3');
-                    agentName.innerHTML = agentName.textContent;
-                    card.removeAttribute('data-players');
-                });
-
-                // Remove all player styles
-                document.querySelectorAll('style').forEach(style => {
-                    if (style.textContent.includes('color-box')) {
-                        style.remove();
-                    }
-                });
-
-                // Clear legend items
-                document.querySelectorAll('.legend-item').forEach(item => {
-                    if (!item.classList.contains('legend-controls')) {
-                        item.remove();
-                    }
-                });
-
-                // Reset colors and storage
-                usedColors.clear();
-                playerColors = {};
-                localStorage.removeItem('valorantPlayers');
-            }
-        });
-
-        document.getElementById('add-player').addEventListener('click', () => {
-            const name = prompt('Enter player name:');
-            if (name && name.trim()) {
-                const sanitizedName = name.trim().replace(/[^a-zA-Z0-9]/g, '');
-                if (!document.querySelector(`.legend-item.${sanitizedName}`)) {
-                    addPlayerToLegend(sanitizedName);
-                    savePlayers();
-                }
-            }
-        });
-
-        document.getElementById('export-players').addEventListener('click', () => {
-            // Gather all players and their agent assignments
-            const players = {};
-            document.querySelectorAll('.legend-item').forEach(item => {
-                if (!item.classList.contains('legend-controls')) {
-                    const playerName = item.querySelector('span').textContent;
-                    players[playerName] = {
-                        duelist: [],
-                        controller: [],
-                        initiator: [],
-                        sentinel: []
-                    };
-
-                    // Find all agents assigned to this player
-                    document.querySelectorAll(`.agent-card.${playerName}`).forEach(card => {
-                        const agentName = card.querySelector('h3').textContent.trim();
-                        const section = card.closest('.agent-grid');
-                        if (section) {
-                            const role = section.id.replace('-section', '');
-                            players[playerName][role].push(agentName);
-                        }
-                    });
-
-                    // Handle split agents
-                    document.querySelectorAll('.agent-card.split-name').forEach(card => {
-                        const spans = card.querySelectorAll(`.${playerName}`);
-                        if (spans.length > 0) {
-                            const agentName = card.querySelector('h3').textContent.trim();
-                            const section = card.closest('.agent-grid');
-                            if (section) {
-                                const role = section.id.replace('-section', '');
-                                players[playerName][role].push(agentName);
-                            }
-                        }
-                    });
-                }
-            });
-
-            // Create and download the JSON file
-            const data = {
-                players: players,
-                exportDate: new Date().toISOString()
-            };
-            
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'valorant-player-assignments.json';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        });
-
-        document.getElementById('import-players-btn').addEventListener('click', () => {
-            document.getElementById('import-players').click();
-        });
-
-        document.getElementById('import-players').addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    try {
-                        const data = JSON.parse(event.target.result);
-                        
-                        // Clear existing assignments
-                        document.querySelectorAll('.agent-card').forEach(card => {
-                            card.className = 'agent-card';
-                            const playerElem = card.querySelector('.player');
-                            if (playerElem) {
-                                playerElem.textContent = 'Unassigned';
-                            }
-                        });
-
-                        // Clear existing player styles
-                        document.querySelectorAll('style').forEach(style => {
-                            if (style.textContent.includes('color-box')) {
-                                style.remove();
-                            }
-                        });
-
-                        // Clear existing legend items except controls
-                        document.querySelectorAll('.legend-item').forEach(item => {
-                            if (!item.classList.contains('legend-controls')) {
-                                item.remove();
-                            }
-                        });
-
-                        // Reset color assignments
-                        playerColors = {};
-                        
-                        // Process players
-                        Object.keys(data.players).forEach(playerName => {
-                            // Add player to legend if not exists
-                            if (!document.querySelector(`.legend-item.${playerName}`)) {
-                                addPlayerToLegend(playerName);
-                            }
-
-                            // Assign agents to player
-                            const playerAgents = data.players[playerName];
-                            Object.keys(playerAgents).forEach(role => {
-                                playerAgents[role].forEach(agentName => {
-                                    const agentCards = Array.from(document.querySelectorAll('.agent-card')).filter(card => 
-                                        card.querySelector('h3').textContent.trim() === agentName
-                                    );
-                                    agentCards.forEach(agentCard => {
-                                        if (agentCard) {
-                                            agentCard.className = 'agent-card ' + playerName;
-                                            agentCard.querySelector('.player').textContent = playerName;
-                                        }
-                                    });
-                                });
-                            });
-                        });
-
-                        // Save players to localStorage
-                        savePlayers();
-                        
-                        alert('Players and assignments imported successfully!');
-                    } catch (error) {
-                        console.error('Error importing players:', error);
-                        alert('Invalid player data file. Please make sure you are using a file exported from this application.');
-                    }
-                };
-                reader.readAsText(file);
-            }
-        });
-
-        // Save/Load players with their colors
-        function savePlayers() {
-            const playerData = {};
-            document.querySelectorAll('.legend-item').forEach(item => {
-                if (!item.classList.contains('legend-controls')) {
-                    const name = item.querySelector('span').textContent;
-                    playerData[name] = playerColors[name];
-                }
-            });
-            localStorage.setItem('valorantPlayers', JSON.stringify(playerData));
-        }
-
-        function loadPlayers() {
-            const savedPlayers = localStorage.getItem('valorantPlayers');
-            if (savedPlayers) {
-                try {
-                    const playerData = JSON.parse(savedPlayers);
-                    Object.entries(playerData).forEach(([name, color]) => {
-                        if (!document.querySelector(`.legend-item.${name}`)) {
-                            addPlayerToLegend(name, color);
-                        }
-                    });
-                } catch (error) {
-                    console.error('Error loading players:', error);
-                }
-            }
-        }
-
-        // Randomizer functionality
-        document.getElementById('randomizer-btn').addEventListener('click', () => {
-            const players = Array.from(document.querySelectorAll('.legend-item:not(.legend-controls)'))
-                .map(item => item.querySelector('span').textContent);
-            
-            if (players.length === 0) {
-                alert('Add some players first!');
-                return;
-            }
-
-            // Reset all agent assignments
-            document.querySelectorAll('.agent-card').forEach(card => {
-                players.forEach(player => card.classList.remove(player));
-                const playerElem = card.querySelector('.player');
-                if (playerElem) {
-                    playerElem.textContent = 'Unassigned';
-                }
-            });
-
-            // Get all agents by role
-            const roles = {
-                duelist: Array.from(document.querySelectorAll('#duelist-section .agent-card')),
-                controller: Array.from(document.querySelectorAll('#controller-section .agent-card')),
-                initiator: Array.from(document.querySelectorAll('#initiator-section .agent-card')),
-                sentinel: Array.from(document.querySelectorAll('#sentinel-section .agent-card'))
-            };
-
-            // Ensure each player gets at least one agent from any role
-            const playerAssignments = {};
-            players.forEach(player => {
-                playerAssignments[player] = [];
-            });
-
-            // Helper function to assign an agent to a player
-            function assignAgent(agent, player, isShared = false) {
-                if (isShared) {
-                    const currentPlayer = agent.querySelector('.player').textContent;
-                    if (currentPlayer !== 'Unassigned') {
-                        agent.classList.add(player);
-                        agent.querySelector('.player').textContent = `${currentPlayer} ${player}`;
-                        playerAssignments[player].push(agent);
-                    } else {
-                        agent.classList.add(player);
-                        agent.querySelector('.player').textContent = player;
-                        playerAssignments[player].push(agent);
-                    }
-                } else {
-                    agent.classList.add(player);
-                    agent.querySelector('.player').textContent = player;
-                    playerAssignments[player].push(agent);
-                }
-            }
-
-            // First pass: Ensure each player gets at least one agent
-            for (const player of players) {
-                // Get all unassigned agents
-                const allAgents = Object.values(roles).flat();
-                const unassignedAgents = allAgents.filter(agent => 
-                    agent.querySelector('.player').textContent === 'Unassigned'
-                );
-                
-                if (unassignedAgents.length > 0) {
-                    const randomAgent = unassignedAgents[Math.floor(Math.random() * unassignedAgents.length)];
-                    assignAgent(randomAgent, player);
-                }
-            }
-
-            // Second pass: Distribute remaining agents with shared assignments
-            Object.entries(roles).forEach(([role, agents]) => {
-                agents.forEach(agent => {
-                    if (agent.querySelector('.player').textContent === 'Unassigned') {
-                        // 25% chance for shared agent
-                        if (Math.random() < 0.25 && players.length > 1) {
-                            // Pick two random players
-                            const availablePlayers = players.filter(p => 
-                                playerAssignments[p].length < Math.ceil(agents.length / players.length) + 1
-                            );
-                            
-                            if (availablePlayers.length >= 2) {
-                                const [player1, player2] = availablePlayers
-                                    .sort(() => Math.random() - 0.5)
-                                    .slice(0, 2);
-                                
-                                assignAgent(agent, player1);
-                                assignAgent(agent, player2, true);
-                            } else {
-                                // Fall back to single assignment if not enough eligible players
-                                const randomPlayer = players[Math.floor(Math.random() * players.length)];
-                                assignAgent(agent, randomPlayer);
-                            }
-                        } else {
-                            // Single assignment
-                            const eligiblePlayers = players.filter(p => 
-                                playerAssignments[p].length < Math.ceil(agents.length / players.length) + 1
-                            );
-                            
-                            const randomPlayer = eligiblePlayers.length > 0 
-                                ? eligiblePlayers[Math.floor(Math.random() * eligiblePlayers.length)]
-                                : players[Math.floor(Math.random() * players.length)];
-                            
-                            assignAgent(agent, randomPlayer);
-                        }
-                    }
-                });
-            });
-
-            // Update coloring for split agents in the randomizer
-            document.querySelectorAll('.agent-card').forEach(card => {
-                const playerText = card.querySelector('.player').textContent;
-                if (playerText.includes(' ')) {
-                    card.classList.add('split-name');
-                    const [player1, player2] = playerText.split(' ');
-                    
-                    // Get player colors from their color boxes
-                    const color1 = getComputedStyle(document.querySelector(`.${player1} .color-box`)).backgroundColor;
-                    const color2 = getComputedStyle(document.querySelector(`.${player2} .color-box`)).backgroundColor;
-                    
-                    // Apply split coloring to player names only
-                    card.querySelector('.player').innerHTML = `
-                        <span class="${player1}" style="color: ${color1}">${player1}</span>
-                        <span class="${player2}" style="color: ${color2}">${player2}</span>
-                    `;
-                    
-                    // Split and color the agent name
-                    const agentName = card.querySelector('h3').textContent;
-                    card.querySelector('h3').innerHTML = `
-                        <span style="color: ${color1}">${agentName}</span>
-                    `;
-                    
-                    card.setAttribute('data-players', `${player1}-${player2}`);
-                }
-            });
-
-            // Add animation to the button
-            const btn = document.getElementById('randomizer-btn');
-            btn.classList.add('animating');
-            setTimeout(() => btn.classList.remove('animating'), 500);
-        });
-
-        // Load saved players on startup
-        loadPlayers();
-    </script>
+    <script src="scripts.js"></script>
 </body>
 </html>

@@ -181,7 +181,6 @@ main {
     overflow-y: auto;
     padding-right: 8px;
     margin-bottom: 8px;
-    max-height: calc(100% - 120px); /* Account for header and controls */
 }
 
 .legend-grid > div:not(.legend-controls) {
@@ -219,6 +218,48 @@ main {
     font-size: 1rem;
     gap: 1rem; /* Add consistent gap */
     position: relative;
+    cursor: default;
+}
+
+.legend-item.new-player {
+    order: 999; /* Move to bottom */
+    margin-top: auto;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* New player input styles */
+.new-player-input {
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-size: 1rem;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    outline: none;
+}
+
+.new-player-input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+.editable-name {
+    cursor: text;
+    min-width: 50px;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.editable-name:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.editable-name:focus {
+    background: rgba(255, 255, 255, 0.15);
+    outline: none;
 }
 
 .legend-item:hover {
@@ -333,6 +374,17 @@ main {
 
 #reset-all:hover {
     background: #ff2a3a;
+    transform: translateY(-2px);
+}
+
+.reset-all-btn {
+    background: var(--accent) !important;
+    margin-top: 1rem;
+    border-color: rgba(255, 70, 85, 0.3);
+}
+
+.reset-all-btn:hover {
+    background: #ff2a3a !important;
     transform: translateY(-2px);
 }
 
@@ -660,168 +712,103 @@ main {
     opacity: 1;
 }
 
-.agent-card.Aaron:hover { box-shadow: 0 8px 16px rgba(0, 255, 178, 0.3); }
-.agent-card.Kevin:hover { box-shadow: 0 8px 16px rgba(170, 255, 0, 0.3); }
-.agent-card.August:hover { box-shadow: 0 8px 16px rgba(255, 182, 193, 0.3); }
-.agent-card.Trippy:hover { box-shadow: 0 8px 16px rgba(255, 105, 180, 0.3); }
-.agent-card.Alyssa:hover { box-shadow: 0 8px 16px rgba(255, 215, 0, 0.3); }
-.agent-card.Jeremy:hover { box-shadow: 0 8px 16px rgba(64, 224, 208, 0.3); }
-
-.agent-info h3, .agent-info .player {
-    transition: color 0.3s ease;
-    color: white
-}
+.agent-card.player-1:hover { box-shadow: 0 8px 16px rgba(255, 107, 107, 0.3); }
+.agent-card.player-2:hover { box-shadow: 0 8px 16px rgba(78, 205, 196, 0.3); }
+.agent-card.player-3:hover { box-shadow: 0 8px 16px rgba(69, 183, 209, 0.3); }
+.agent-card.player-4:hover { box-shadow: 0 8px 16px rgba(150, 206, 180, 0.3); }
+.agent-card.player-5:hover { box-shadow: 0 8px 16px rgba(255, 238, 173, 0.3); }
 
 .agent-info h3 {
-    text-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
 }
 
 .agent-info .player {
-    font-weight: 500;
-    letter-spacing: 0.5px;
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+.agent-card.split-name {
+    display: none;
+}
+
+@keyframes coinSpin {
+    0% {
+        transform: rotateY(0deg) translateY(0px);
+        filter: brightness(1);
+    }
+    25% {
+        transform: rotateY(90deg) translateY(-10px);
+        filter: brightness(0.5);
+    }
+    50% {
+        transform: rotateY(180deg) translateY(0px);
+        filter: brightness(1);
+    }
+    75% {
+        transform: rotateY(270deg) translateY(-10px);
+        filter: brightness(0.5);
+    }
+    100% {
+        transform: rotateY(360deg) translateY(0px);
+        filter: brightness(1);
+    }
 }
 
 .agent-icon {
-    width: 64px;
-    height: 64px;
-    margin-bottom: 1rem;
+    width: 96px;
+    height: 96px;
     border-radius: 50%;
     background: var(--bg-color);
     padding: 0.5rem;
-    opacity: 0;
-    transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    display: block;
+    margin: 0 auto 1rem;
+    object-fit: cover;
+    animation: coinSpin 2s ease-in-out infinite;
     will-change: transform;
+    transform-style: preserve-3d;
+    perspective: 1000px;
     backface-visibility: hidden;
-    transform: translateZ(0);
 }
 
-.agent-icon.loaded {
-    opacity: 1;
-}
-
-.agent-icon.error {
-    opacity: 0.5;
-    filter: grayscale(1);
-}
-
+/* Keep spinning even on hover */
 .agent-card:hover .agent-icon {
-    animation: float 2s ease-in-out infinite;
-    box-shadow: 0 0 15px rgba(255, 70, 85, 0.2);
+    animation: coinSpin 2s ease-in-out infinite;
 }
-
-@keyframes float {
-    0% {
-        transform: translateY(0) scale(1.1);
-    }
-    50% {
-        transform: translateY(-5px) scale(1.1);
-    }
-    100% {
-        transform: translateY(0) scale(1.1);
-    }
-}
-
-.agent-info h3 {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-}
-
-
 
 /* Player colors */
-.Jeremy { color: #40E0D0; }
-.Trippy { color: #FF69B4; }
-.August { color: #FFB6C1; }
-.Kevin { color: #AAFF00; }
-.Alyssa { color: #FFD700; }
-.Aaron { color: #00FFB2; }
+.player-1 { color: #FF6B6B; }
+.player-2 { color: #4ECDC4; }
+.player-3 { color: #45B7D1; }
+.player-4 { color: #96CEB4; }
+.player-5 { color: #FFEEAD; }
 
 /* Color boxes - Use the same colors */
-.Jeremy .color-box { 
-    background-color: #40E0D0;
-    box-shadow: 0 0 8px rgba(64, 224, 208, 0.3);
+.player-1 .color-box { 
+    background-color: #FF6B6B;
+    box-shadow: 0 0 8px rgba(255, 107, 107, 0.3);
 }
-.Trippy .color-box { 
-    background-color: #FF69B4;
-    box-shadow: 0 0 8px rgba(255, 105, 180, 0.3);
+.player-2 .color-box { 
+    background-color: #4ECDC4;
+    box-shadow: 0 0 8px rgba(78, 205, 196, 0.3);
 }
-.August .color-box { 
-    background-color: #FFB6C1;
-    box-shadow: 0 0 8px rgba(255, 182, 193, 0.3);
+.player-3 .color-box { 
+    background-color: #45B7D1;
+    box-shadow: 0 0 8px rgba(69, 183, 209, 0.3);
 }
-.Kevin .color-box { 
-    background-color: #AAFF00;
-    box-shadow: 0 0 8px rgba(170, 255, 0, 0.3);
+.player-4 .color-box { 
+    background-color: #96CEB4;
+    box-shadow: 0 0 8px rgba(150, 206, 180, 0.3);
 }
-.Alyssa .color-box { 
-    background-color: #FFD700;
-    box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
-}
-.Aaron .color-box { 
-    background-color: #00FFB2;
-    box-shadow: 0 0 8px rgba(0, 255, 178, 0.3);
+.player-5 .color-box { 
+    background-color: #FFEEAD;
+    box-shadow: 0 0 8px rgba(255, 238, 173, 0.3);
 }
 
-/* Card hover effects with matching colors */
-.agent-card.Jeremy:hover { box-shadow: 0 8px 16px rgba(64, 224, 208, 0.3); }
-.agent-card.Trippy:hover { box-shadow: 0 8px 16px rgba(255, 105, 180, 0.3); }
-.agent-card.August:hover { box-shadow: 0 8px 16px rgba(255, 182, 193, 0.3); }
-.agent-card.Kevin:hover { box-shadow: 0 8px 16px rgba(170, 255, 0, 0.3); }
-.agent-card.Alyssa:hover { box-shadow: 0 8px 16px rgba(255, 215, 0, 0.3); }
-.agent-card.Aaron:hover { box-shadow: 0 8px 16px rgba(0, 255, 178, 0.3); }
-
-
-
-.player {
-    font-size: 1.1rem;
-    color: var(--text-secondary);
-}
-
-/* Player color classes - Enhanced colors for better visibility */
-.Aaron { 
-    color: #00FFB2; /* Brighter turquoise */
-}
-.Kevin { 
-    color: #AAFF00; /* Bright lime */
-}
-.August { 
-    color: #FFB6C1; /* Light pink */
-}
-.Trippy { 
-    color: #FF69B4; /* Hot pink */
-}
-.Alyssa { 
-    color: #FFD700; /* Gold */
-}
-.Jeremy { 
-    color: #40E0D0; /* Turquoise */
-}
-
-/* Color boxes for legend - Match the new colors */
-.Aaron .color-box { 
-    background-color: #00FFB2;
-    box-shadow: 0 0 8px rgba(0, 255, 178, 0.3);
-}
-.Kevin .color-box { 
-    background-color: #AAFF00;
-    box-shadow: 0 0 8px rgba(170, 255, 0, 0.3);
-}
-.August .color-box { 
-    background-color: #FFB6C1;
-    box-shadow: 0 0 8px rgba(255, 182, 193, 0.3);
-}
-.Trippy .color-box { 
-    background-color: #FF69B4;
-    box-shadow: 0 0 8px rgba(255, 105, 180, 0.3);
-}
-.Alyssa .color-box { 
-    background-color: #FFD700;
-    box-shadow: 0 0 8px rgba(255, 215, 0.3);
-}
-.Jeremy .color-box { 
-    background-color: #40E0D0;
-    box-shadow: 0 0 8px rgba(64, 224, 208, 0.3);
-}
+/* Remove old player color classes */
+.Aaron, .Kevin, .August, .Trippy, .Alyssa, .Jeremy { color: inherit; }
 
 /* Responsive design */
 @media (max-width: 768px) {
@@ -956,44 +943,74 @@ kbd {
     }
 }
 
-/* Randomizer button */
+/* Modernize randomizer button */
 .randomizer-button {
     position: fixed;
     right: 2rem;
     top: 50%;
     transform: translateY(-50%);
-    width: calc(500px + 2rem); /* Two agent cards width + gap */
-    height: 200px;
+    width: calc(500px + 2rem);
+    height: 120px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, var(--duelist-color), var(--controller-color), var(--initiator-color), var(--sentinel-color));
-    border-radius: 12px;
+    background: linear-gradient(135deg, 
+        var(--duelist-color), 
+        var(--controller-color), 
+        var(--initiator-color), 
+        var(--sentinel-color)
+    );
+    background-size: 300% 300%;
+    animation: gradientShift 8s ease infinite;
+    border-radius: 16px;
     cursor: pointer;
-    font-size: 2rem;
+    font-size: 1.8rem;
+    font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0.2em;
     color: var(--text-primary);
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     transition: all 0.3s ease;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.2),
+        inset 0 2px 4px rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
     z-index: var(--z-header);
+    overflow: hidden;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.randomizer-button::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg, transparent 0%, rgba(255, 255, 255, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .randomizer-button:hover {
     transform: translateY(calc(-50% - 5px));
-    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
+    box-shadow: 
+        0 12px 48px rgba(255, 70, 85, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.2);
 }
 
-.randomizer-button.animating {
-    animation: pulse 0.5s ease-in-out;
+.randomizer-button:hover::before {
+    opacity: 1;
 }
 
-@keyframes pulse {
-    0% { transform: translateY(-50%) scale(1); }
-    50% { transform: translateY(-50%) scale(0.95); }
-    100% { transform: translateY(-50%) scale(1); }
+.randomizer-button:active {
+    transform: translateY(calc(-50% + 2px));
+    box-shadow: 
+        0 8px 16px rgba(255, 70, 85, 0.2),
+        inset 0 2px 4px rgba(255, 255, 255, 0.1);
 }
 
 @media (max-width: 1600px) {
@@ -1002,10 +1019,38 @@ kbd {
         transform: none;
         width: calc(100% - 4rem);
         margin: 2rem auto;
-        height: 150px;
+        height: 100px;
     }
     
     .randomizer-button:hover {
         transform: translateY(-5px);
     }
+    
+    .randomizer-button:active {
+        transform: translateY(2px);
+    }
+}
+
+.show-agents-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: auto;
+}
+
+.show-agents-btn:hover {
+    background: #ff2a3a;
+    transform: scale(1.05);
+}
+
+.player-name {
+    cursor: pointer;
+}
+
+.add-player-btn {
+    display: none;
 }
