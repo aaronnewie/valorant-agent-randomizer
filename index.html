@@ -29,23 +29,30 @@
     <link rel="preload" href="images/Vyse_icon.png.webp" as="image">
     <title>Our Valorant Season</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
+    <!-- Add this before your scripts.js -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 </head>
 <body>
     <header role="banner">
         <div class="header-container">
             <h1>Valorant Agent Randomizer</h1>
             <div class="player-legend" role="complementary" aria-label="Player Legend">
-                <h2>Players</h2>
-                <div class="legend-grid">
-                    <div class="legend-item new-player">
-                        <div class="color-box"></div>
-                        <input type="text" class="new-player-input" placeholder="Enter player name" aria-label="New player name">
-                    </div>
-                    <div class="legend-controls">
-                        <button class="legend-button" id="export-players">Export Players</button>
-                        <button class="legend-button" id="import-players-btn">Import Players</button>
-                        <input type="file" id="import-players" hidden accept=".json">
-                        <button class="legend-button reset-all-btn" id="reset-all">Reset All Players</button>
+                <div class="legend-header">
+                    <h2>Players</h2>
+                </div>
+                <div class="legend-content">
+                    <div class="legend-grid">
+                        <div class="legend-item new-player">
+                            <div class="color-box"></div>
+                            <input type="text" 
+                                   class="new-player-input" 
+                                   placeholder="Enter player name" 
+                                   aria-label="New player name">
+                        </div>
+                        <!-- Players will be inserted here -->
+                        <div class="legend-controls">
+                            <button class="reset-all-btn" id="reset-all">Reset All</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -54,6 +61,13 @@
             </div>
         </div>
     </header>
+
+    <!-- Add scroll to top button -->
+    <button class="scroll-top" aria-label="Scroll to top">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 19V5M5 12l7-7 7 7"/>
+        </svg>
+    </button>
 
     <nav class="role-nav" role="navigation" aria-label="Agent Roles">
         <button class="role-btn active" data-role="all">All Roles</button>
@@ -277,22 +291,6 @@
             </div>
         </section>
     </main>
-
-    <div class="keyboard-help" role="dialog" aria-label="Keyboard Shortcuts" aria-modal="true" hidden>
-        <div class="keyboard-help-content">
-            <button class="close-dialog" aria-label="Close keyboard shortcuts help">×</button>
-            <h3>Keyboard Shortcuts</h3>
-            <ul>
-                <li><kbd>A</kbd> Show all agents</li>
-                <li><kbd>D</kbd> Show duelists</li>
-                <li><kbd>C</kbd> Show controllers</li>
-                <li><kbd>I</kbd> Show initiators</li>
-                <li><kbd>S</kbd> Show sentinels</li>
-                <li><kbd>?</kbd> Toggle this help dialog</li>
-                <li><kbd>ESC</kbd> Close this dialog</li>
-            </ul>
-        </div>
-    </div>
 
     <script src="scripts.js"></script>
 </body>
