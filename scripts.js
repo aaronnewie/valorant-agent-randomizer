@@ -2,27 +2,80 @@
 const playerColors = {};
 let players = [];
 
-// Predefined colors for players
-const predefinedColors = [
-    '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD', '#D4A5A5',
-    '#9B59B6', '#3498DB', '#F1C40F', '#E74C3C', '#1ABC9C', '#F39C12'
-];
+// Constants for configuration
+const CONFIG = {
+    MAX_PLAYERS: 10,
+    MIN_NAME_LENGTH: 2,
+    MAX_NAME_LENGTH: 20,
+    SAVE_KEY: 'valorantPlayers'
+};
 
+// Get a random HSL color that's visible on dark background
 function getNextColor() {
-    // Get the next unused color from predefined colors
-    const usedColors = Object.values(playerColors);
-    const nextColor = predefinedColors.find(color => !usedColors.includes(color));
-    return nextColor || predefinedColors[Math.floor(Math.random() * predefinedColors.length)];
+    const hue = Math.floor(Math.random() * 360);
+    const saturation = Math.floor(Math.random() * 30) + 70; // 70-100%
+    const lightness = Math.floor(Math.random() * 20) + 50;  // 50-70%
+    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 }
 
+// Function to safely encode player names for CSS classes
+function encodeForCSS(name) {
+    // Replace any non-alphanumeric characters with their unicode code points
+    return name.replace(/[^a-zA-Z0-9]/g, char => {
+        return '_' + char.charCodeAt(0);
+    });
+}
+
+// Function to add a new player
+function addNewPlayer() {
+    const playerName = document.querySelector('.new-player-input').value.trim();
+    if (playerName) {
+        if (playerName.length > CONFIG.MAX_NAME_LENGTH) {
+            alert(`Player name must be ${CONFIG.MAX_NAME_LENGTH} characters or less`);
+            return;
+        }
+        
+        const color = generateUniqueColor();
+        if (addPlayerToLegend(playerName, color)) {
+            // Clear input and close form
+            document.querySelector('.new-player-input').value = '';
+            document.querySelector('.new-player-form').style.display = 'none';
+        }
+    }
+}
+
+// Function to generate a unique color
+function generateUniqueColor() {
+    const existingColors = Object.values(playerColors);
+    let newColor = getNextColor();
+    let attempts = 0;
+    
+    // Try to generate a color that's not too similar to existing ones
+    while (existingColors.includes(newColor) && attempts < 10) {
+        newColor = getNextColor();
+        attempts++;
+    }
+    
+    return newColor;
+}
+
+// Function to add a player to the legend
 function addPlayerToLegend(name, color) {
+    if (players.includes(name)) {
+        alert('Player name already exists!');
+        return false;
+    }
+
+    const cssName = encodeForCSS(name);
     playerColors[name] = color;
     players.push(name);
     
     const playerStyle = document.createElement('style');
+    playerStyle.setAttribute('data-player', name);
     playerStyle.textContent = `
-        .player-${name} { color: ${color}; }
-        .legend-item.player-${name} .color-box { 
+        .player-${cssName} { color: ${color}; }
+        .agent-card.player-${cssName} .player { color: ${color}; }
+        .legend-item.player-${cssName} .color-box { 
             background-color: ${color};
             box-shadow: 0 0 8px ${color}4D;
         }
@@ -31,16 +84,15 @@ function addPlayerToLegend(name, color) {
 
     const legendGrid = document.querySelector('.legend-grid');
     const legendItem = document.createElement('div');
-    legendItem.className = `legend-item player-${name}`;
+    legendItem.className = `legend-item player-${cssName}`;
+    legendItem.dataset.playerName = name; // Store original name as data attribute
     legendItem.innerHTML = `
         <div class="color-box"></div>
-        <span>${name}</span>
+        <span contenteditable="true">${name}</span>
         <button class="delete-player" aria-label="Delete ${name}">×</button>
     `;
 
-    // Insert before the legend controls
-    const legendControls = document.querySelector('.legend-controls');
-    legendGrid.insertBefore(legendItem, legendControls);
+    legendGrid.appendChild(legendItem);
 
     // Add delete handler
     legendItem.querySelector('.delete-player').addEventListener('click', (e) => {
@@ -48,57 +100,144 @@ function addPlayerToLegend(name, color) {
         deletePlayer(name);
     });
 
-    savePlayers();
-    return legendItem;
-}
-
-function deletePlayer(name) {
-    if (confirm(`Are you sure you want to delete ${name}?`)) {
-        const legendItem = document.querySelector(`.legend-item.player-${name}`);
-        if (legendItem) {
-            legendItem.remove();
+    // Add rename handler
+    const nameSpan = legendItem.querySelector('span');
+    nameSpan.addEventListener('blur', () => {
+        const newName = nameSpan.textContent.trim();
+        if (newName && newName !== name && !players.includes(newName)) {
+            renamePlayer(name, newName);
+        } else {
+            nameSpan.textContent = name; // Reset to original name
         }
+    });
 
-        // Remove player's color style
-        document.querySelectorAll('style').forEach(style => {
-            if (style.textContent.includes(`.player-${name}`)) {
-                style.remove();
-            }
-        });
+    nameSpan.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            nameSpan.blur();
+        }
+    });
 
-        // Unassign player from all agents
-        document.querySelectorAll(`.agent-card.player-${name}`).forEach(card => {
-            card.classList.remove(`player-${name}`);
-            const playerElem = card.querySelector('.player');
-            if (playerElem) {
-                playerElem.textContent = 'Unassigned';
-            }
-        });
-
-        // Remove from players array and colors
-        players = players.filter(p => p !== name);
-        delete playerColors[name];
-        savePlayers();
-    }
+    savePlayers();
+    return true;
 }
 
-// Save/Load players
+// Function to delete a player
+function deletePlayer(name) {
+    const cssName = encodeForCSS(name);
+    const legendItem = document.querySelector(`.legend-item.player-${cssName}`);
+    if (legendItem) {
+        legendItem.remove();
+    }
+
+    // Remove player's color style
+    document.querySelectorAll('style').forEach(style => {
+        if (style.getAttribute('data-player') === name) {
+            style.remove();
+        }
+    });
+
+    // Unassign player from all agents
+    document.querySelectorAll(`.agent-card.player-${cssName}`).forEach(card => {
+        card.classList.remove(`player-${cssName}`);
+        const playerElem = card.querySelector('.player');
+        if (playerElem) {
+            playerElem.textContent = 'Unassigned';
+            playerElem.style.color = 'white';
+        }
+    });
+
+    // Remove from players array and colors
+    players = players.filter(p => p !== name);
+    delete playerColors[name];
+    savePlayers();
+}
+
+// Function to rename a player
+function renamePlayer(oldName, newName) {
+    if (players.includes(newName)) {
+        alert('Player name already exists!');
+        return false;
+    }
+
+    const color = playerColors[oldName];
+    delete playerColors[oldName];
+    playerColors[newName] = color;
+
+    // Update players array
+    const index = players.indexOf(oldName);
+    if (index !== -1) {
+        players[index] = newName;
+    }
+
+    // Update CSS classes
+    const oldStyle = document.querySelector(`style[data-player="${oldName}"]`);
+    if (oldStyle) {
+        oldStyle.remove();
+    }
+
+    const newStyle = document.createElement('style');
+    newStyle.setAttribute('data-player', newName);
+    newStyle.textContent = `
+        .player-${encodeForCSS(newName)} { color: ${color}; }
+        .legend-item.player-${encodeForCSS(newName)} .color-box { 
+            background-color: ${color};
+            box-shadow: 0 0 8px ${color}4D;
+        }
+    `;
+    document.head.appendChild(newStyle);
+
+    // Update legend item
+    const legendItem = document.querySelector(`.legend-item.player-${encodeForCSS(oldName)}`);
+    if (legendItem) {
+        legendItem.className = `legend-item player-${encodeForCSS(newName)}`;
+        const deleteBtn = legendItem.querySelector('.delete-player');
+        if (deleteBtn) {
+            deleteBtn.setAttribute('aria-label', `Delete ${newName}`);
+        }
+    }
+
+    // Update agent cards
+    document.querySelectorAll(`.agent-card.player-${encodeForCSS(oldName)}`).forEach(card => {
+        card.classList.remove(`player-${encodeForCSS(oldName)}`);
+        card.classList.add(`player-${encodeForCSS(newName)}`);
+        const playerElem = card.querySelector('.player');
+        if (playerElem) {
+            playerElem.textContent = newName;
+        }
+    });
+
+    savePlayers();
+    return true;
+}
+
+// Function to save players to localStorage
 function savePlayers() {
     const playerData = {
         players: players,
-        colors: playerColors
+        colors: playerColors,
+        exportDate: new Date().toISOString()
     };
-    localStorage.setItem('valorantPlayers', JSON.stringify(playerData));
+    localStorage.setItem(CONFIG.SAVE_KEY, JSON.stringify(playerData));
 }
 
+// Function to load players from localStorage
 function loadPlayers() {
-    const savedData = localStorage.getItem('valorantPlayers');
+    const savedData = localStorage.getItem(CONFIG.SAVE_KEY);
     if (savedData) {
         try {
             const { players: savedPlayers, colors } = JSON.parse(savedData);
+            // Clear existing players first
+            players = [];
+            Object.keys(playerColors).forEach(key => delete playerColors[key]);
+            document.querySelectorAll('.legend-item').forEach(item => {
+                if (!item.classList.contains('legend-controls')) {
+                    item.remove();
+                }
+            });
+            // Add saved players
             savedPlayers.forEach(name => {
-                if (!document.querySelector(`.legend-item.player-${name}`)) {
-                    playerColors[name] = colors[name];
+                if (!document.querySelector(`.legend-item.player-${encodeForCSS(name)}`)) {
                     addPlayerToLegend(name, colors[name]);
                 }
             });
@@ -108,310 +247,287 @@ function loadPlayers() {
     }
 }
 
-// Randomizer functionality
-function randomizeAgents() {
-    if (players.length === 0) {
-        alert('Add at least one player first!');
-        return;
-    }
-
-    // Reset all agent assignments
-    document.querySelectorAll('.agent-card').forEach(card => {
-        card.className = 'agent-card';
-        const playerElem = card.querySelector('.player');
-        if (playerElem) {
-            playerElem.textContent = 'Unassigned';
-        }
-    });
-
-    // Get all agents by role
-    const roles = {
-        duelist: Array.from(document.querySelectorAll('#duelist-section .agent-card')),
-        controller: Array.from(document.querySelectorAll('#controller-section .agent-card')),
-        initiator: Array.from(document.querySelectorAll('#initiator-section .agent-card')),
-        sentinel: Array.from(document.querySelectorAll('#sentinel-section .agent-card'))
-    };
-
-    // Assign agents to players
-    const playerAssignments = {};
-    players.forEach(player => {
-        playerAssignments[player] = [];
-    });
-
-    // Assign at least one agent to each player first
-    for (const player of players) {
-        const allAgents = Object.values(roles).flat();
-        const unassignedAgents = allAgents.filter(agent => 
-            agent.querySelector('.player').textContent === 'Unassigned'
-        );
-        
-        if (unassignedAgents.length > 0) {
-            const randomAgent = unassignedAgents[Math.floor(Math.random() * unassignedAgents.length)];
-            assignAgentToPlayer(randomAgent, player);
-            playerAssignments[player].push(randomAgent);
-        }
-    }
-
-    // Distribute remaining agents
-    Object.values(roles).flat().forEach(agent => {
-        if (agent.querySelector('.player').textContent === 'Unassigned') {
-            const randomPlayer = players[Math.floor(Math.random() * players.length)];
-            assignAgentToPlayer(agent, randomPlayer);
-            playerAssignments[randomPlayer].push(agent);
-        }
-    });
-}
-
+// Function to assign an agent to a player
 function assignAgentToPlayer(agentCard, playerName) {
-    agentCard.className = `agent-card player-${playerName}`;
+    // Remove any existing player classes
+    players.forEach(player => {
+        agentCard.classList.remove(`player-${encodeForCSS(player)}`);
+    });
+    
+    // Add the new player class
+    agentCard.classList.add(`player-${encodeForCSS(playerName)}`);
+    
+    // Update the player name text
     const playerElem = agentCard.querySelector('.player');
     if (playerElem) {
         playerElem.textContent = playerName;
+        // Ensure the color is applied
+        playerElem.style.color = playerColors[playerName];
     }
 }
 
-// Initialize the new player input
-function initializeNewPlayerInput() {
-    const newPlayerBox = document.querySelector('.new-player .color-box');
-    const newPlayerInput = document.querySelector('.new-player-input');
-    const legendGrid = document.querySelector('.legend-grid');
-    const initialColor = getNextColor();
+// Function to randomize agents
+function randomizeAgents() {
+    console.log('Randomizing agents...');
     
-    // Set initial color
-    newPlayerBox.style.backgroundColor = initialColor;
-    newPlayerBox.style.boxShadow = `0 0 8px ${initialColor}4D`;
-
-    // Move new player input to bottom
-    legendGrid.appendChild(document.querySelector('.legend-item.new-player'));
-
-    // Focus the input initially
-    newPlayerInput.focus();
-
-    // Handle input events
-    newPlayerInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            const name = e.target.value.trim();
-            if (name) {
-                addPlayerToLegend(name, initialColor);
-                // Reset input and get new color for next player
-                e.target.value = '';
-                const nextColor = getNextColor();
-                newPlayerBox.style.backgroundColor = nextColor;
-                newPlayerBox.style.boxShadow = `0 0 8px ${nextColor}4D`;
-                // Re-focus the input after adding a player
-                setTimeout(() => e.target.focus(), 0);
-            }
+    // First, reset all agent assignments
+    document.querySelectorAll('.agent-card').forEach(card => {
+        const playerElem = card.querySelector('.player');
+        if (playerElem) {
+            playerElem.textContent = 'Unassigned';
+            playerElem.style.color = 'var(--text-primary)'; // Reset color
         }
-    });
-}
-
-// Make player names editable
-function makeNamesEditable() {
-    document.addEventListener('click', (e) => {
-        const span = e.target;
-        if (!span.closest('.legend-item') || span.classList.contains('new-player-input')) return;
-        
-        // If clicking the delete button, don't start editing
-        if (e.target.classList.contains('delete-player')) return;
-
-        const nameSpan = span.tagName === 'SPAN' ? span : span.querySelector('span');
-        if (!nameSpan) return;
-
-        const currentName = nameSpan.textContent;
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.value = currentName;
-        input.className = 'editable-name';
-        
-        function handleEdit() {
-            const newName = input.value.trim();
-            if (newName && newName !== currentName) {
-                // Update player name everywhere
-                const playerClass = Array.from(span.closest('.legend-item').classList)
-                    .find(cls => cls.startsWith('player-'));
-                
-                // Update agent cards
-                document.querySelectorAll(`.agent-card.${playerClass}`).forEach(card => {
-                    const playerElem = card.querySelector('.player');
-                    if (playerElem) {
-                        playerElem.textContent = newName;
-                    }
-                });
-
-                // Update player array and storage
-                const index = players.indexOf(currentName);
-                if (index !== -1) {
-                    players[index] = newName;
-                    playerColors[newName] = playerColors[currentName];
-                    delete playerColors[currentName];
-                    savePlayers();
-                }
-            }
-            nameSpan.textContent = newName || currentName;
-            input.remove();
-        }
-
-        input.addEventListener('blur', handleEdit);
-        input.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                handleEdit();
-                e.preventDefault();
-            }
-        });
-
-        nameSpan.textContent = '';
-        nameSpan.appendChild(input);
-        input.focus();
-        input.select();
-    });
-}
-
-// Event Listeners
-document.addEventListener('DOMContentLoaded', () => {
-    loadPlayers();
-
-    // Reset all button
-    document.getElementById('reset-all').addEventListener('click', () => {
-        if (confirm('This will remove all players and reset all agent assignments. Are you sure?')) {
-            // Clear all player assignments
-            document.querySelectorAll('.agent-card').forEach(card => {
-                card.className = 'agent-card';
-                const playerElem = card.querySelector('.player');
-                if (playerElem) {
-                    playerElem.textContent = 'Unassigned';
-                }
-            });
-
-            // Remove all player styles
-            document.querySelectorAll('style').forEach(style => {
-                if (style.textContent.includes('color-box')) {
-                    style.remove();
-                }
-            });
-
-            // Clear legend items
-            document.querySelectorAll('.legend-item').forEach(item => {
-                if (!item.classList.contains('legend-controls') && !item.classList.contains('new-player')) {
-                    item.remove();
-                }
-            });
-
-            // Reset state
-            players = [];
-            Object.keys(playerColors).forEach(key => delete playerColors[key]);
-            localStorage.removeItem('valorantPlayers');
-        }
+        // Remove all player classes
+        card.className = 'agent-card';
     });
 
-    // Randomizer button
-    document.getElementById('randomizer-btn').addEventListener('click', randomizeAgents);
-
-    // Show all sections by default
-    document.querySelectorAll('.agent-grid').forEach(section => {
-        section.classList.add('active');
-    });
-
-    // Role button functionality
-    document.querySelectorAll('.role-btn').forEach((button, index) => {
-        button.addEventListener('click', () => handleRoleChange(button));
-        button.setAttribute('tabindex', '0');
-        button.setAttribute('role', 'tab');
-        button.setAttribute('aria-selected', index === 0 ? 'true' : 'false');
-    });
-
-    // Keyboard shortcuts
-    const shortcuts = {
-        'a': 'all',
-        'd': 'duelist',
-        'c': 'controller',
-        'i': 'initiator',
-        's': 'sentinel',
-        '?': 'help'
-    };
-
-    document.addEventListener('keydown', (e) => {
-        if (e.target.tagName === 'INPUT') return;
-        
-        if (e.key in shortcuts && !e.ctrlKey && !e.altKey && !e.metaKey) {
-            if (shortcuts[e.key] === 'help') {
-                toggleHelpDialog();
-            } else {
-                const button = document.querySelector(`.role-btn[data-role="${shortcuts[e.key]}"]`);
-                if (button) {
-                    handleRoleChange(button);
-                    button.focus();
-                }
-            }
-        }
-
-        if (e.key === 'Escape') {
-            const helpDialog = document.querySelector('.keyboard-help');
-            if (!helpDialog.hasAttribute('hidden')) {
-                helpDialog.setAttribute('hidden', '');
-            }
-        }
-    });
-
-    // Help dialog functionality
-    const helpDialog = document.querySelector('.keyboard-help');
-    const closeDialogBtn = document.querySelector('.close-dialog');
-    
-    function toggleHelpDialog() {
-        const isHidden = helpDialog.hasAttribute('hidden');
-        if (isHidden) {
-            helpDialog.removeAttribute('hidden');
-        } else {
-            helpDialog.setAttribute('hidden', '');
-        }
+    if (players.length === 0) {
+        alert('Add players first!');
+        return;
     }
 
-    closeDialogBtn?.addEventListener('click', () => {
-        helpDialog.setAttribute('hidden', '');
+    // Get all visible agent cards based on current role selection
+    const visibleSections = Array.from(document.querySelectorAll('.agent-grid')).filter(section => 
+        section.style.display !== 'none'
+    );
+    
+    const agentCards = [];
+    visibleSections.forEach(section => {
+        agentCards.push(...Array.from(section.querySelectorAll('.agent-card')));
     });
+    
+    console.log(`Found ${agentCards.length} visible agent cards`);
+    
+    // Shuffle the cards
+    const shuffledCards = [...agentCards].sort(() => Math.random() - 0.5);
+    
+    // Assign at least one agent to each player
+    const playersWithAgents = {};
+    players.forEach(player => playersWithAgents[player] = 0);
+    
+    let cardIndex = 0;
+    players.forEach(player => {
+        if (cardIndex < shuffledCards.length) {
+            assignAgentToPlayer(shuffledCards[cardIndex], player);
+            playersWithAgents[player]++;
+            cardIndex++;
+        }
+    });
+    
+    // Distribute remaining agents
+    while (cardIndex < shuffledCards.length) {
+        const player = players[Math.floor(Math.random() * players.length)];
+        assignAgentToPlayer(shuffledCards[cardIndex], player);
+        playersWithAgents[player]++;
+        cardIndex++;
+    }
+    
+    console.log('Randomization complete!');
+}
 
-    initializeNewPlayerInput();
-    makeNamesEditable();
-});
-
-function handleRoleChange(button) {
-    // Remove active class from all buttons
+// Function to handle role changes
+function handleRoleChange(selectedButton) {
+    console.log('Role button clicked:', selectedButton.getAttribute('data-role'));
+    
+    // Update active state of buttons
     document.querySelectorAll('.role-btn').forEach(btn => {
         btn.classList.remove('active');
         btn.setAttribute('aria-selected', 'false');
     });
+    selectedButton.classList.add('active');
+    selectedButton.setAttribute('aria-selected', 'true');
 
-    // Add active class to clicked button
-    button.classList.add('active');
-    button.setAttribute('aria-selected', 'true');
+    const selectedRole = selectedButton.getAttribute('data-role');
+    const sections = document.querySelectorAll('.agent-grid');
 
-    const role = button.dataset.role;
-    localStorage.setItem('activeRole', role);
-
-    // Remove active class from all sections
-    document.querySelectorAll('.agent-grid').forEach(section => {
-        section.classList.remove('active');
+    // Show/hide sections based on role
+    sections.forEach(section => {
+        if (selectedRole === 'all' || section.id === `${selectedRole}-section`) {
+            section.style.display = 'block';
+        } else {
+            section.style.display = 'none';
+        }
     });
+    
+    console.log('Role selection updated');
+}
 
-    if (role === 'all') {
-        // Show all sections
-        document.querySelectorAll('.agent-grid').forEach(section => {
-            section.classList.add('active');
+document.addEventListener('DOMContentLoaded', () => {
+    // Get UI elements
+    const addPlayerBtn = document.getElementById('add-player-btn');
+    const newPlayerForm = document.querySelector('.new-player-form');
+    const newPlayerInput = document.querySelector('.new-player-input');
+    const randomizeBtn = document.getElementById('randomizer-btn');
+    const roleButtons = document.querySelectorAll('.role-btn');
+    const collapseBtn = document.querySelector('.collapse-legend');
+    const legend = document.querySelector('.player-legend');
+    const scrollToTopBtn = document.getElementById('scroll-to-top');
+    
+    console.log('Initializing Valorant Agent Randomizer...');
+    
+    // Initially hide the form
+    if (newPlayerForm) {
+        newPlayerForm.style.display = 'none';
+    }
+    
+    // 1. PLAYER MANAGEMENT
+    // Setup Add Player button
+    if (addPlayerBtn && newPlayerForm && newPlayerInput) {
+        console.log('Setting up Add Player button');
+        
+        // Create submit button for the form
+        const submitBtn = document.createElement('button');
+        submitBtn.type = 'button';
+        submitBtn.className = 'submit-player-btn';
+        submitBtn.textContent = 'Add';
+        newPlayerForm.appendChild(submitBtn);
+        
+        // Toggle form visibility when clicking Add Player button
+        addPlayerBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const isVisible = newPlayerForm.style.display === 'flex';
+            newPlayerForm.style.display = isVisible ? 'none' : 'flex';
+            if (!isVisible) {
+                newPlayerInput.focus();
+            }
         });
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
+        
+        // Add player on submit button click
+        submitBtn.addEventListener('click', function() {
+            addNewPlayer();
+        });
+        
+        // Add player on Enter key
+        newPlayerInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addNewPlayer();
+            }
+        });
+        
+        // Hide form when clicking outside
+        document.addEventListener('click', function(e) {
+            if (newPlayerForm.style.display === 'flex' && 
+                !newPlayerForm.contains(e.target) && 
+                !addPlayerBtn.contains(e.target)) {
+                newPlayerForm.style.display = 'none';
+            }
         });
     } else {
-        // Show only the selected section
-        const section = document.getElementById(`${role}-section`);
-        if (section) {
-            section.classList.add('active');
-            const headerOffset = document.querySelector('header').offsetHeight + 20;
-            const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+        console.error('Add player elements not found!');
+    }
+    
+    // 2. RANDOMIZE BUTTON
+    if (randomizeBtn) {
+        console.log('Setting up Randomize button');
+        randomizeBtn.addEventListener('click', function() {
+            console.log('Randomize button clicked');
+            randomizeAgents();
+        });
+    } else {
+        console.error('Randomize button not found!');
+    }
+    
+    // 3. ROLE BUTTONS
+    if (roleButtons && roleButtons.length > 0) {
+        console.log('Setting up Role buttons');
+        roleButtons.forEach((button, index) => {
+            button.addEventListener('click', function() {
+                console.log('Role button clicked:', this.getAttribute('data-role'));
+                handleRoleChange(this);
+            });
+            button.setAttribute('aria-selected', index === 0 ? 'true' : 'false');
+        });
+        
+        // Initialize sections visibility
+        const allRoleButton = document.querySelector('.role-btn[data-role="all"]');
+        if (allRoleButton) {
+            handleRoleChange(allRoleButton);
+        }
+    } else {
+        console.error('Role buttons not found!');
+    }
+    
+    // 4. COLLAPSE BUTTON
+    if (collapseBtn && legend) {
+        console.log('Setting up Collapse button');
+        let isCollapsed = false;
+        
+        collapseBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Collapse button clicked');
+            
+            isCollapsed = !isCollapsed;
+            if (isCollapsed) {
+                legend.classList.add('collapsed');
+                // Change icon to expand (plus sign)
+                this.querySelector('svg').innerHTML = '<path fill="currentColor" d="M19 13H13v6h-2v-6H5v-2h6V5h2v6h6v2z"/>';
+                this.setAttribute('aria-label', 'Expand legend');
+                
+                // Hide all content except the header
+                const legendContent = legend.querySelector('.legend-content');
+                if (legendContent) {
+                    legendContent.style.display = 'none';
+                }
+            } else {
+                legend.classList.remove('collapsed');
+                // Change icon to collapse (minus sign)
+                this.querySelector('svg').innerHTML = '<path fill="currentColor" d="M19 13H5v-2h14v2z"/>';
+                this.setAttribute('aria-label', 'Collapse legend');
+                
+                // Show the content again
+                const legendContent = legend.querySelector('.legend-content');
+                if (legendContent) {
+                    legendContent.style.display = 'flex';
+                }
+            }
+        });
+    } else {
+        console.error('Collapse button or legend not found!');
+    }
+
+    // 5. SCROLL TO TOP BUTTON
+    if (scrollToTopBtn) {
+        console.log('Setting up Scroll to Top button');
+        
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                scrollToTopBtn.classList.add('visible');
+            } else {
+                scrollToTopBtn.classList.remove('visible');
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', function() {
             window.scrollTo({
-                top: sectionTop,
+                top: 0,
                 behavior: 'smooth'
             });
+        });
+    }
+    
+    // 6. HELPER FUNCTIONS
+    // Function to add a new player
+    function addNewPlayer() {
+        const playerName = newPlayerInput.value.trim();
+        if (playerName) {
+            if (playerName.length > CONFIG.MAX_NAME_LENGTH) {
+                alert(`Player name must be ${CONFIG.MAX_NAME_LENGTH} characters or less`);
+                return;
+            }
+            
+            const color = generateUniqueColor();
+            if (addPlayerToLegend(playerName, color)) {
+                // Clear input but keep form open for next player
+                newPlayerInput.value = '';
+                newPlayerInput.focus();
+            }
         }
     }
-}
+    
+    // Load any saved players
+    loadPlayers();
+    
+    console.log('Initialization complete!');
+});

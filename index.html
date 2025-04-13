@@ -1,9 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Our Valorant Season - Track player roles and agent assignments">
+    <meta name="description" content="Randomize Valorant agents for your team with this easy-to-use tool">
+    <title>Valorant Agent Randomizer</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Preload important images -->
+    <link rel="preload" as="image" href="assets/background.jpg">
     <meta name="keywords" content="Valorant, agents, team, roles, duelist, controller, initiator, sentinel">
     <meta property="og:title" content="Our Valorant Season">
     <meta property="og:description" content="Track player roles and agent assignments in our Valorant team">
@@ -27,256 +31,368 @@
     <link rel="preload" href="images/Waylay_icon.png.webp" as="image">
     <link rel="preload" href="images/Tejo_icon.png.webp" as="image">
     <link rel="preload" href="images/Vyse_icon.png.webp" as="image">
-    <title>Our Valorant Season</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
+    <style>
+        .player-legend {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            width: 280px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: var(--z-header);
+            max-height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+
+        .add-player-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--accent);
+            color: var(--text-primary);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .add-player-btn:hover {
+            background: #ff2a3a;
+            transform: translateY(-2px);
+        }
+
+        .new-player-form {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            border: 1px dashed var(--text-secondary);
+        }
+
+        .new-player-form .color-box {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+        }
+
+        .new-player-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            padding: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .new-player-input:focus {
+            outline: none;
+        }
+
+        .legend-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            max-height: calc(100vh - 12rem);
+            overflow-y: auto;
+        }
+
+        /* Remove old .new-player styles */
+        .legend-item.new-player {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <header role="banner">
-        <div class="header-container">
+    <div class="container">
+        <header class="main-header">
             <h1>Valorant Agent Randomizer</h1>
-            <div class="player-legend" role="complementary" aria-label="Player Legend">
-                <h2>Players</h2>
-                <div class="legend-grid">
-                    <div class="legend-item new-player">
-                        <div class="color-box"></div>
-                        <input type="text" class="new-player-input" placeholder="Enter player name" aria-label="New player name">
+        </header>
+        
+        <div class="app-layout">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <!-- Player Legend -->
+                <div class="player-legend" role="complementary" aria-label="Player Legend">
+                    <div class="legend-header">
+                        <h2>Players</h2>
+                        <button class="collapse-legend" aria-label="Collapse legend">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                <path fill="currentColor" d="M19 13H5v-2h14v2z"/>
+                            </svg>
+                        </button>
                     </div>
-                    <div class="legend-controls">
-                        <button class="legend-button" id="export-players">Export Players</button>
-                        <button class="legend-button" id="import-players-btn">Import Players</button>
-                        <input type="file" id="import-players" hidden accept=".json">
-                        <button class="legend-button reset-all-btn" id="reset-all">Reset All Players</button>
+                    <div class="legend-content">
+                        <div class="legend-controls">
+                            <button id="add-player-btn" class="add-player-btn" aria-haspopup="true">
+                                Add Player
+                            </button>
+                            <div class="new-player-form" style="display: none;">
+                                <div class="color-box"></div>
+                                <input type="text" class="new-player-input" placeholder="Enter player name" maxlength="20">
+                            </div>
+                        </div>
+                        <div class="legend-grid">
+                            <!-- Player items will be added here dynamically -->
+                        </div>
+                        <!-- Randomize Button -->
+                        <button id="randomizer-btn" class="randomizer-button">
+                            Randomize Agents
+                        </button>
                     </div>
                 </div>
-            </div>
-            <div id="randomizer-btn" class="randomizer-button">
-                <span>Randomize Agents</span>
-            </div>
-        </div>
-    </header>
+            </aside>
 
-    <nav class="role-nav" role="navigation" aria-label="Agent Roles">
-        <button class="role-btn active" data-role="all">All Roles</button>
-        <button class="role-btn" data-role="duelist">Duelists</button>
-        <button class="role-btn" data-role="controller">Controllers</button>
-        <button class="role-btn" data-role="initiator">Initiators</button>
-        <button class="role-btn" data-role="sentinel">Sentinels</button>
-    </nav>
+            <!-- Main Content -->
+            <main class="main-content">
+                <nav class="role-nav" role="tablist" aria-label="Agent roles">
+                    <button class="role-btn active" data-role="all" role="tab" aria-selected="true" aria-controls="all-section">
+                        All Roles
+                    </button>
+                    <button class="role-btn" data-role="duelist" role="tab" aria-selected="false" aria-controls="duelist-section">
+                        <span class="role-icon duelist-icon" aria-hidden="true"></span>
+                        Duelists
+                    </button>
+                    <button class="role-btn" data-role="controller" role="tab" aria-selected="false" aria-controls="controller-section">
+                        <span class="role-icon controller-icon" aria-hidden="true"></span>
+                        Controllers
+                    </button>
+                    <button class="role-btn" data-role="initiator" role="tab" aria-selected="false" aria-controls="initiator-section">
+                        <span class="role-icon initiator-icon" aria-hidden="true"></span>
+                        Initiators
+                    </button>
+                    <button class="role-btn" data-role="sentinel" role="tab" aria-selected="false" aria-controls="sentinel-section">
+                        <span class="role-icon sentinel-icon" aria-hidden="true"></span>
+                        Sentinels
+                    </button>
+                </nav>
 
-    <main role="main">
-        <section class="agent-grid" id="duelist-section" role="region" aria-labelledby="duelist-title">
-            <h2 class="role-title" id="duelist-title">Duelists</h2>
-            <div class="agents">
-                <div class="agent-card">
-                    <img src="images/Jett_icon.png.webp" alt="Jett" class="agent-icon">
-                    <div class="agent-info">
-                        <h3>Jett</h3>
-                        <p class="player">Unassigned</p>
+                <section class="agent-grid" id="duelist-section" role="region" aria-labelledby="duelist-title">
+                    <h2 class="role-title" id="duelist-title">Duelists</h2>
+                    <div class="agents">
+                        <div class="agent-card">
+                            <img src="images/Jett_icon.png.webp" alt="Jett" class="agent-icon">
+                            <div class="agent-info">
+                                <h3>Jett</h3>
+                                <p class="player">Unassigned</p>
+                            </div>
+                        </div>
+                    <div class="agent-card">
+                        <img src="images/Phoenix_icon.png.webp" alt="Phoenix" class="agent-icon">
+                        <div class="agent-info">
+                            <h3>Phoenix</h3>
+                            <p class="player">Unassigned</p>
+                        </div>
+                    </div>
+                    <div class="agent-card">
+                        <img src="images/Neon_icon.png.webp" alt="Neon" class="agent-icon">
+                        <div class="agent-info">
+                            <h3>Neon</h3>
+                            <p class="player">Unassigned</p>
+                        </div>
+                    </div>
+                    <div class="agent-card">
+                        <img src="images/Raze_icon.png.webp" alt="Raze" class="agent-icon">
+                        <div class="agent-info">
+                            <h3>Raze</h3>
+                            <p class="player">Unassigned</p>
+                        </div>
+                    </div>
+                    <div class="agent-card">
+                        <img src="images/Reyna_icon.png.webp" alt="Reyna" class="agent-icon">
+                        <div class="agent-info">
+                            <h3>Reyna</h3>
+                            <p class="player">Unassigned</p>
+                        </div>
+                    </div>
+                    <div class="agent-card">
+                        <img src="images/Yoru_icon.png.webp" alt="Yoru" class="agent-icon">
+                        <div class="agent-info">
+                            <h3>Yoru</h3>
+                            <p class="player">Unassigned</p>
+                        </div>
+                    </div>
+                    <div class="agent-card">
+                        <img src="images/Iso_icon.png.webp" alt="Iso" class="agent-icon">
+                        <div class="agent-info">
+                            <h3>Iso</h3>
+                            <p class="player">Unassigned</p>
+                        </div>
                     </div>
                 </div>
-                <div class="agent-card">
-                    <img src="images/Phoenix_icon.png.webp" alt="Phoenix" class="agent-icon">
-                    <div class="agent-info">
-                        <h3>Phoenix</h3>
-                        <p class="player">Unassigned</p>
-                    </div>
-                </div>
-                <div class="agent-card">
-                    <img src="images/Neon_icon.png.webp" alt="Neon" class="agent-icon">
-                    <div class="agent-info">
-                        <h3>Neon</h3>
-                        <p class="player">Unassigned</p>
-                    </div>
-                </div>
-                <div class="agent-card">
-                    <img src="images/Raze_icon.png.webp" alt="Raze" class="agent-icon">
-                    <div class="agent-info">
-                        <h3>Raze</h3>
-                        <p class="player">Unassigned</p>
-                    </div>
-                </div>
-                <div class="agent-card">
-                    <img src="images/Reyna_icon.png.webp" alt="Reyna" class="agent-icon">
-                    <div class="agent-info">
-                        <h3>Reyna</h3>
-                        <p class="player">Unassigned</p>
-                    </div>
-                </div>
-                <div class="agent-card">
-                    <img src="images/Yoru_icon.png.webp" alt="Yoru" class="agent-icon">
-                    <div class="agent-info">
-                        <h3>Yoru</h3>
-                        <p class="player">Unassigned</p>
-                    </div>
-                </div>
-                <div class="agent-card">
-                    <img src="images/Iso_icon.png.webp" alt="Iso" class="agent-icon">
-                    <div class="agent-info">
-                        <h3>Iso</h3>
-                        <p class="player">Unassigned</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="agent-grid" id="controller-section" role="region" aria-labelledby="controller-title">
-            <h2 class="role-title" id="controller-title">Controllers</h2>
-            <div class="agents">
-                <div class="agent-card">
-                    <img src="images/Astra_icon.png.webp" alt="Astra" class="agent-icon">
-                    <div class="agent-info">
-                        <h3>Astra</h3>
-                        <p class="player">Unassigned</p>
+            <section class="agent-grid" id="controller-section" role="region" aria-labelledby="controller-title">
+                <h2 class="role-title" id="controller-title">Controllers</h2>
+                <div class="agents">
+                    <div class="agent-card">
+                        <img src="images/Astra_icon.png.webp" alt="Astra" class="agent-icon">
+                        <div class="agent-info">
+                            <h3>Astra</h3>
+                            <p class="player">Unassigned</p>
+                        </div>
+                    </div>
+                    <div class="agent-card">
+                        <img src="images/Brimstone_icon.png.webp" alt="Brimstone" class="agent-icon">
+                        <div class="agent-info">
+                            <h3>Brimstone</h3>
+                            <p class="player">Unassigned</p>
+                        </div>
+                    </div>
+                    <div class="agent-card">
+                        <img src="images/Omen_icon.png.webp" alt="Omen" class="agent-icon">
+                        <div class="agent-info">
+                            <h3>Omen</h3>
+                            <p class="player">Unassigned</p>
+                        </div>
+                    </div>
+                    <div class="agent-card">
+                        <img src="images/Viper_icon.png.webp" alt="Viper" class="agent-icon">
+                        <div class="agent-info">
+                            <h3>Viper</h3>
+                            <p class="player">Unassigned</p>
+                        </div>
+                    </div>
+                    <div class="agent-card">
+                        <img src="images/Harbor_icon.png.webp" alt="Harbor" class="agent-icon">
+                        <div class="agent-info">
+                            <h3>Harbor</h3>
+                            <p class="player">Unassigned</p>
+                        </div>
+                    </div>
+                    <div class="agent-card">
+                        <img src="images/Clove_icon.png.webp" alt="Clove" class="agent-icon">
+                        <div class="agent-info">
+                            <h3>Clove</h3>
+                            <p class="player">Unassigned</p>
+                        </div>
                     </div>
                 </div>
-                <div class="agent-card">
-                    <img src="images/Brimstone_icon.png.webp" alt="Brimstone" class="agent-icon">
-                    <div class="agent-info">
-                        <h3>Brimstone</h3>
-                        <p class="player">Unassigned</p>
-                    </div>
-                </div>
-                <div class="agent-card">
-                    <img src="images/Omen_icon.png.webp" alt="Omen" class="agent-icon">
-                    <div class="agent-info">
-                        <h3>Omen</h3>
-                        <p class="player">Unassigned</p>
-                    </div>
-                </div>
-                <div class="agent-card">
-                    <img src="images/Viper_icon.png.webp" alt="Viper" class="agent-icon">
-                    <div class="agent-info">
-                        <h3>Viper</h3>
-                        <p class="player">Unassigned</p>
-                    </div>
-                </div>
-                <div class="agent-card">
-                    <img src="images/Harbor_icon.png.webp" alt="Harbor" class="agent-icon">
-                    <div class="agent-info">
-                        <h3>Harbor</h3>
-                        <p class="player">Unassigned</p>
-                    </div>
-                </div>
-                <div class="agent-card">
-                    <img src="images/Clove_icon.png.webp" alt="Clove" class="agent-icon">
-                    <div class="agent-info">
-                        <h3>Clove</h3>
-                        <p class="player">Unassigned</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="agent-grid" id="initiator-section" role="region" aria-labelledby="initiator-title">
-            <h2 class="role-title" id="initiator-title">Initiators</h2>
-            <div class="agents">
-                <div class="agent-card">
-                    <img src="images/Breach_icon.png.webp" alt="Breach" class="agent-icon">
-                    <div class="agent-info">
-                        <h3>Breach</h3>
-                        <p class="player">Unassigned</p>
+            <section class="agent-grid" id="initiator-section" role="region" aria-labelledby="initiator-title">
+                <h2 class="role-title" id="initiator-title">Initiators</h2>
+                <div class="agents">
+                    <div class="agent-card">
+                        <img src="images/Breach_icon.png.webp" alt="Breach" class="agent-icon">
+                        <div class="agent-info">
+                            <h3>Breach</h3>
+                            <p class="player">Unassigned</p>
+                        </div>
+                    </div>
+                    <div class="agent-card">
+                        <img src="images/Gekko_icon.png.webp" alt="Gekko" class="agent-icon">
+                        <div class="agent-info">
+                            <h3>Gekko</h3>
+                            <p class="player">Unassigned</p>
+                        </div>
+                    </div>
+                    <div class="agent-card">
+                        <img src="images/KAYO_icon.png.webp" alt="KAY/O" class="agent-icon">
+                        <div class="agent-info">
+                            <h3>KAY/O</h3>
+                            <p class="player">Unassigned</p>
+                        </div>
+                    </div>
+                    <div class="agent-card">
+                        <img src="images/Skye_icon.png.webp" alt="Skye" class="agent-icon">
+                        <div class="agent-info">
+                            <h3>Skye</h3>
+                            <p class="player">Unassigned</p>
+                        </div>
+                    </div>
+                    <div class="agent-card">
+                        <img src="images/Sova_icon.png.webp" alt="Sova" class="agent-icon">
+                        <div class="agent-info">
+                            <h3>Sova</h3>
+                            <p class="player">Unassigned</p>
+                        </div>
+                    </div>
+                    <div class="agent-card">
+                        <img src="images/Fade_icon.png.webp" alt="Fade" class="agent-icon">
+                        <div class="agent-info">
+                            <h3>Fade</h3>
+                            <p class="player">Unassigned</p>
+                        </div>
+                    </div>
+                    <div class="agent-card">
+                        <img src="images/Waylay_icon.png.webp" alt="Waylay" class="agent-icon">
+                        <div class="agent-info">
+                            <h3>Waylay</h3>
+                            <p class="player">Unassigned</p>
+                        </div>
                     </div>
                 </div>
-                <div class="agent-card">
-                    <img src="images/Gekko_icon.png.webp" alt="Gekko" class="agent-icon">
-                    <div class="agent-info">
-                        <h3>Gekko</h3>
-                        <p class="player">Unassigned</p>
-                    </div>
-                </div>
-                <div class="agent-card">
-                    <img src="images/KAYO_icon.png.webp" alt="KAY/O" class="agent-icon">
-                    <div class="agent-info">
-                        <h3>KAY/O</h3>
-                        <p class="player">Unassigned</p>
-                    </div>
-                </div>
-                <div class="agent-card">
-                    <img src="images/Skye_icon.png.webp" alt="Skye" class="agent-icon">
-                    <div class="agent-info">
-                        <h3>Skye</h3>
-                        <p class="player">Unassigned</p>
-                    </div>
-                </div>
-                <div class="agent-card">
-                    <img src="images/Sova_icon.png.webp" alt="Sova" class="agent-icon">
-                    <div class="agent-info">
-                        <h3>Sova</h3>
-                        <p class="player">Unassigned</p>
-                    </div>
-                </div>
-                <div class="agent-card">
-                    <img src="images/Fade_icon.png.webp" alt="Fade" class="agent-icon">
-                    <div class="agent-info">
-                        <h3>Fade</h3>
-                        <p class="player">Unassigned</p>
-                    </div>
-                </div>
-                <div class="agent-card">
-                    <img src="images/Waylay_icon.png.webp" alt="Waylay" class="agent-icon">
-                    <div class="agent-info">
-                        <h3>Waylay</h3>
-                        <p class="player">Unassigned</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="agent-grid" id="sentinel-section" role="region" aria-labelledby="sentinel-title">
-            <h2 class="role-title" id="sentinel-title">Sentinels</h2>
-            <div class="agents">
-                <div class="agent-card">
-                    <img src="images/Chamber_icon.png.webp" alt="Chamber" class="agent-icon">
-                    <div class="agent-info">
-                        <h3>Chamber</h3>
-                        <p class="player">Unassigned</p>
+            <section class="agent-grid" id="sentinel-section" role="region" aria-labelledby="sentinel-title">
+                <h2 class="role-title" id="sentinel-title">Sentinels</h2>
+                <div class="agents">
+                    <div class="agent-card">
+                        <img src="images/Chamber_icon.png.webp" alt="Chamber" class="agent-icon">
+                        <div class="agent-info">
+                            <h3>Chamber</h3>
+                            <p class="player">Unassigned</p>
+                        </div>
+                    </div>
+                    <div class="agent-card">
+                        <img src="images/Cypher_icon.png.webp" alt="Cypher" class="agent-icon">
+                        <div class="agent-info">
+                            <h3>Cypher</h3>
+                            <p class="player">Unassigned</p>
+                        </div>
+                    </div>
+                    <div class="agent-card">
+                        <img src="images/Killjoy_icon.png.webp" alt="Killjoy" class="agent-icon">
+                        <div class="agent-info">
+                            <h3>Killjoy</h3>
+                            <p class="player">Unassigned</p>
+                        </div>
+                    </div>
+                    <div class="agent-card">
+                        <img src="images/Sage_icon.png.webp" alt="Sage" class="agent-icon">
+                        <div class="agent-info">
+                            <h3>Sage</h3>
+                            <p class="player">Unassigned</p>
+                        </div>
+                    </div>
+                    <div class="agent-card">
+                        <img src="images/Deadlock_icon.png.webp" alt="Deadlock" class="agent-icon">
+                        <div class="agent-info">
+                            <h3>Deadlock</h3>
+                            <p class="player">Unassigned</p>
+                        </div>
+                    </div>
+                    <div class="agent-card">
+                        <img src="images/Tejo_icon.png.webp" alt="Tejo" class="agent-icon">
+                        <div class="agent-info">
+                            <h3>Tejo</h3>
+                            <p class="player">Unassigned</p>
+                        </div>
+                    </div>
+                    <div class="agent-card">
+                        <img src="images/Vyse_icon.png.webp" alt="Vyse" class="agent-icon">
+                        <div class="agent-info">
+                            <h3>Vyse</h3>
+                            <p class="player">Unassigned</p>
+                        </div>
                     </div>
                 </div>
-                <div class="agent-card">
-                    <img src="images/Cypher_icon.png.webp" alt="Cypher" class="agent-icon">
-                    <div class="agent-info">
-                        <h3>Cypher</h3>
-                        <p class="player">Unassigned</p>
-                    </div>
-                </div>
-                <div class="agent-card">
-                    <img src="images/Killjoy_icon.png.webp" alt="Killjoy" class="agent-icon">
-                    <div class="agent-info">
-                        <h3>Killjoy</h3>
-                        <p class="player">Unassigned</p>
-                    </div>
-                </div>
-                <div class="agent-card">
-                    <img src="images/Sage_icon.png.webp" alt="Sage" class="agent-icon">
-                    <div class="agent-info">
-                        <h3>Sage</h3>
-                        <p class="player">Unassigned</p>
-                    </div>
-                </div>
-                <div class="agent-card">
-                    <img src="images/Deadlock_icon.png.webp" alt="Deadlock" class="agent-icon">
-                    <div class="agent-info">
-                        <h3>Deadlock</h3>
-                        <p class="player">Unassigned</p>
-                    </div>
-                </div>
-                <div class="agent-card">
-                    <img src="images/Tejo_icon.png.webp" alt="Tejo" class="agent-icon">
-                    <div class="agent-info">
-                        <h3>Tejo</h3>
-                        <p class="player">Unassigned</p>
-                    </div>
-                </div>
-                <div class="agent-card">
-                    <img src="images/Vyse_icon.png.webp" alt="Vyse" class="agent-icon">
-                    <div class="agent-info">
-                        <h3>Vyse</h3>
-                        <p class="player">Unassigned</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
+            </section>
+            </main>
+        </div> <!-- End of app-layout -->
+        
+        <button id="scroll-to-top" class="scroll-to-top" aria-label="Scroll to top">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+            <path fill="currentColor" d="M12 4l8 8h-6v8h-4v-8H4z"/>
+        </svg>
+    </button>
 
     <div class="keyboard-help" role="dialog" aria-label="Keyboard Shortcuts" aria-modal="true" hidden>
         <div class="keyboard-help-content">
@@ -295,5 +411,60 @@
     </div>
 
     <script src="scripts.js"></script>
+    <script>
+        function initializeNewPlayerInput() {
+            const addPlayerBtn = document.getElementById('add-player-btn');
+            const newPlayerForm = document.querySelector('.new-player-form');
+            const newPlayerInput = document.querySelector('.new-player-input');
+            const colorBox = newPlayerForm.querySelector('.color-box');
+            let currentColor = getNextColor();
+
+            // Show/hide form when clicking Add Player
+            addPlayerBtn.addEventListener('click', () => {
+                newPlayerForm.style.display = 'flex';
+                newPlayerInput.focus();
+                // Generate new color
+                currentColor = getNextColor();
+                colorBox.style.backgroundColor = currentColor;
+            });
+
+            // Handle input events
+            newPlayerInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const name = e.target.value.trim();
+                    if (!name) return;
+                    
+                    if (players.includes(name)) {
+                        alert('Player name already exists!');
+                        e.target.value = '';
+                        return;
+                    }
+
+                    addPlayerToLegend(name, currentColor);
+                    // Reset form
+                    e.target.value = '';
+                    newPlayerForm.style.display = 'none';
+                    // Get new color for next time
+                    currentColor = getNextColor();
+                }
+            });
+
+            // Hide form when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!newPlayerForm.contains(e.target) && !addPlayerBtn.contains(e.target)) {
+                    newPlayerForm.style.display = 'none';
+                }
+            });
+        }
+
+        function getNextColor() {
+            // Generate a random HSL color that's visible on dark background
+            const hue = Math.floor(Math.random() * 360);
+            const saturation = Math.floor(Math.random() * 30) + 70; // 70-100%
+            const lightness = Math.floor(Math.random() * 20) + 50;  // 50-70%
+            const color = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+            return color;
+        }
+    </script>
 </body>
 </html>
